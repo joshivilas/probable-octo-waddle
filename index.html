@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Winner Declare 🎉</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 350px;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: #ff6f61;
+    }
+    input {
+      width: 80%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border: 2px solid #ff6f61;
+      border-radius: 8px;
+    }
+    button {
+      background: #ff6f61;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff3b2e;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+    }
+    li {
+      background: #ffe0dc;
+      margin: 5px 0;
+      padding: 5px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏆 Declare Winners</h1>
+    <input type="text" id="winnerInput" placeholder="Enter winner name">
+    <button onclick="addWinner()">Add</button>
+    <ul id="winnerList"></ul>
+    <button onclick="goToWinners()">Show Winners 🎉</button>
+  </div>
+
+  <script>
+    let winners = [];
+
+    function addWinner() {
+      const input = document.getElementById('winnerInput');
+      const name = input.value.trim();
+      if(name) {
+        winners.push(name);
+        const li = document.createElement('li');
+        li.textContent = name;
+        document.getElementById('winnerList').appendChild(li);
+        input.value = '';
+      }
+    }
+
+    function goToWinners() {
+      if(winners.length === 0) {
+        alert("Please add at least one winner!");
+        return;
+      }
+      // Create a unique hash from winners list
+      const encoded = encodeURIComponent(btoa(JSON.stringify(winners)));
+      window.location.href = `winners.html#${encoded}`;
+    }
+  </script>
+</body>
+</html>
