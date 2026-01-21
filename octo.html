@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retro Thank You 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: radial-gradient(circle at center, #000000 0%, #1a1a1a 100%);
+      color: #00ffea;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .container {
+      background: rgba(0,0,0,0.8);
+      border: 4px solid #ff00ff;
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      width: 500px;
+      box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
+    }
+    h1 {
+      color: #ff00ff;
+      text-shadow: 2px 2px #00ffff;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+    }
+    li {
+      background: #111;
+      border: 2px solid #00ffea;
+      margin: 6px 0;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: #ffcc00;
+      transition: transform 0.3s;
+    }
+    li:hover {
+      transform: scale(1.1);
+      background: #222;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 1rem 2rem;
+      border: 3px solid #00ffea;
+      background: #000;
+      color: #00ffea;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.3s;
+      text-transform: uppercase;
+    }
+    button:hover {
+      background: #00ffea;
+      color: #000;
+      box-shadow: 0 0 15px #00ffea;
+    }
+    #content {
+      display: none;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="container">
+    <h1>RETRO THANK YOU!</h1>
+    <button onclick="startCelebration()">PRESS START 🎶</button>
+    <div id="content">
+      <p id="thankMessage"></p>
+      <ul id="nameList"></ul>
+    </div>
+  </div>
+
+  <audio id="cheerSound" src="/party-blower-sounds-19825.mp3" preload="auto"></audio>
+
+  <script>
+    const THANK_MESSAGE = "You are legendary! 🕹️";
+
+    function startCelebration() {
+      const sound = document.getElementById("cheerSound");
+      sound.play();
+      setTimeout(() => { sound.pause(); sound.currentTime = 0; }, 7000); // play only 4s
+
+      document.getElementById("thankMessage").textContent = THANK_MESSAGE;
+      document.getElementById("content").style.display = "block";
+
+      const hash = window.location.hash.substring(1);
+      if(hash) {
+        try {
+          const decoded = JSON.parse(atob(decodeURIComponent(hash)));
+          const list = document.getElementById('nameList');
+          list.innerHTML = "";
+          decoded.forEach(name => {
+            const li = document.createElement('li');
+            li.textContent = name;
+            list.appendChild(li);
+          });
+        } catch(e) {
+          alert("Invalid data in URL!");
+        }
+      }
+      launchConfetti();
+    }
+
+    // Retro pixel confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confettiPieces = [];
+    const colors = ['#ff00ff','#00ffea','#ffcc00','#00ff00','#0077ff'];
+
+    function ConfettiPiece() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height - canvas.height;
+      this.size = Math.random() * 8 + 4;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.speed = Math.random() * 3 + 2;
+    }
+
+    function createConfetti() {
+      for(let i=0; i<150; i++) {
+        confettiPieces.push(new ConfettiPiece());
+      }
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      confettiPieces.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size); // pixel squares
+        p.y += p.speed;
+        if(p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawConfetti);
+    }
+
+    function launchConfetti() {
+      confettiPieces.length = 0;
+      createConfetti();
+      drawConfetti();
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
