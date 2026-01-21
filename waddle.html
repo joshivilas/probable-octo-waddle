@@ -6,19 +6,22 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      background-attachment: fixed;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
       overflow: hidden;
+      color: #fff;
     }
     .container {
-      background: white;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
       padding: 2rem;
       border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
       text-align: center;
       width: 480px;
       animation: fadeIn 0.8s ease;
@@ -31,11 +34,11 @@
     }
     h1 {
       margin-bottom: 1rem;
-      color: #ff6f61;
+      color: #ffcc00;
+      text-shadow: 0 0 8px #fff;
     }
     p {
       font-size: 1.1rem;
-      color: #333;
       margin-bottom: 1rem;
     }
     ul {
@@ -44,18 +47,18 @@
       margin-top: 1rem;
     }
     li {
-      background: #ffe0dc;
+      background: rgba(255,255,255,0.2);
       margin: 6px 0;
       padding: 10px;
       border-radius: 8px;
       font-size: 1rem;
       font-weight: bold;
-      color: #ff6f61;
+      color: #ffcc00;
       transition: transform 0.3s;
     }
     li:hover {
       transform: scale(1.05);
-      background: #ffc1b6;
+      background: rgba(255,255,255,0.3);
     }
     canvas {
       position: fixed;
@@ -71,15 +74,17 @@
       padding: 0.8rem 1.5rem;
       border: none;
       border-radius: 10px;
-      background: linear-gradient(135deg, #ff6f61, #ff3b2e);
-      color: white;
+      background: linear-gradient(135deg, #ffcc00, #ff6f61);
+      color: #2c5364;
       font-size: 1.1rem;
       cursor: pointer;
       transition: 0.3s;
+      font-weight: bold;
     }
     button:hover {
-      background: linear-gradient(135deg, #ff3b2e, #c62828);
+      background: linear-gradient(135deg, #ff6f61, #c62828);
       transform: scale(1.05);
+      color: #fff;
     }
     #content {
       display: none;
@@ -89,7 +94,7 @@
 <body>
   <canvas id="confetti"></canvas>
   <div class="container">
-    <h1>🎊 Thank You 🎊</h1>
+    <h1>🌌 Thank You 🌌</h1>
     <button onclick="startCelebration()">Click to Celebrate 🎶</button>
     <div id="content">
       <p id="thankMessage"></p>
@@ -97,24 +102,16 @@
     </div>
   </div>
 
-  <!-- Replace with any sound file you like -->
   <audio id="cheerSound" src="/party-blower-sounds-19825.mp3" preload="auto"></audio>
 
   <script>
-    // Constant thank-you message
     const THANK_MESSAGE = "You are just amazing! 🥳";
 
-    // Celebration trigger
     function startCelebration() {
-      // Play sound
-      const sound = document.getElementById("cheerSound");
-      sound.play();
-
-      // Show content
+      document.getElementById("cheerSound").play();
       document.getElementById("thankMessage").textContent = THANK_MESSAGE;
       document.getElementById("content").style.display = "block";
 
-      // Load names from base64 hash
       const hash = window.location.hash.substring(1);
       if(hash) {
         try {
@@ -130,19 +127,17 @@
           alert("Invalid data in URL!");
         }
       }
-
-      // Start confetti
       launchConfetti();
     }
 
-    // Confetti animation (rectangles with rotation)
+    // Confetti with rotating rectangles
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const confettiPieces = [];
-    const colors = ['#ff6f61','#ffcc00','#0077ff','#00c853','#9c27b0'];
+    const colors = ['#ffcc00','#ff6f61','#00c853','#9c27b0','#0077ff'];
 
     function ConfettiPiece() {
       this.x = Math.random() * canvas.width;
