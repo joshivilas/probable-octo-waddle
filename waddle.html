@@ -108,7 +108,12 @@
     const THANK_MESSAGE = "You are just amazing! 🥳";
 
     function startCelebration() {
-      document.getElementById("cheerSound").play();
+      const sound = document.getElementById("cheerSound"); sound.play(); 
+      // Stop after 3 seconds 
+      setTimeout(() => { 
+        sound.pause(); 
+        sound.currentTime = 0; // reset to start 
+      }, 7000);
       document.getElementById("thankMessage").textContent = THANK_MESSAGE;
       document.getElementById("content").style.display = "block";
 
