@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Winner Declare 🎉</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #a1c4fd 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
+      text-align: center;
+      width: 420px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: slideIn 0.6s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    h1 {
+      margin-bottom: 1.5rem;
+      color: #ff6f61;
+      font-size: 1.8rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: 2px solid #ff6f61;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #ff3b2e;
+      box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.2);
+      transform: translateY(-2px);
+    }
+    .add-btn {
+      background: linear-gradient(135deg, #ff6f61, #ff3b2e);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      margin-top: 0.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(255, 111, 97, 0.3);
+    }
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 111, 97, 0.4);
+    }
+    .add-btn:active {
+      transform: translateY(0);
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    li {
+      background: linear-gradient(135deg, #ffe0dc, #ffd1cc);
+      margin: 8px 0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-weight: 500;
+      color: #d6336c;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 111, 97, 0.2);
+    }
+    li:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(255, 111, 97, 0.2);
+    }
+    .celebration-options {
+      margin: 2rem 0;
+      text-align: left;
+    }
+    .celebration-options h3 {
+      margin-bottom: 1rem;
+      color: #ff6f61;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #ff6f61;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6f61' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1rem;
+      padding-right: 3rem;
+    }
+    select:focus {
+      outline: none;
+      border-color: #ff3b2e;
+      box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.2);
+      transform: translateY(-2px);
+    }
+    .generate-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      margin-top: 1.5rem;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      width: 100%;
+    }
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    }
+    .generate-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏆 Declare Winners</h1>
+    <div class="input-group">
+      <input type="text" id="winnerInput" placeholder="Enter winner name" onkeypress="handleKeyPress(event)">
+      <button class="add-btn" onclick="addWinner()">Add Winner</button>
+    </div>
+    <ul id="winnerList"></ul>
+    
+    <div class="celebration-options">
+      <h3>Choose Celebration Style:</h3>
+      <select id="celebrationStyle">
+        <option value="winners.html">🎊 Winners Display - Animated confetti celebration</option>
+        <option value="octo.html">🕹️ Retro Thank You - Pixel style with sound effects</option>
+        <option value="waddle.html">🎉 Elegant Thank You - Smooth animations and glassmorphism</option>
+      </select>
+    </div>
+    
+    <button class="generate-btn" onclick="generateLink()">Generate Celebration Link 🎉</button>
+  </div>
+
+  <script>
+    let winners = [];
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        addWinner();
+      }
+    }
+
+    function addWinner() {
+      const input = document.getElementById('winnerInput');
+      const name = input.value.trim();
+      if(name) {
+        winners.push(name);
+        const li = document.createElement('li');
+        li.textContent = name;
+        document.getElementById('winnerList').appendChild(li);
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function generateLink() {
+      if(winners.length === 0) {
+        alert("Please add at least one winner!");
+        return;
+      }
+      
+      // Get selected celebration style
+      const selectedStyle = document.getElementById('celebrationStyle').value;
+      
+      // Create a unique hash from winners list
+      const encoded = encodeURIComponent(btoa(JSON.stringify(winners)));
+      const baseUrl = window.location.href.replace('Celebrate-winner.html', '');
+      const link = `${baseUrl}${selectedStyle}#${encoded}`;
+      
+      // Copy link to clipboard
+      navigator.clipboard.writeText(link).then(() => {
+        alert(`Celebration link copied to clipboard!\n\n${link}\n\nShare this link with your team to celebrate the winners!`);
+      }).catch(() => {
+        // Fallback for browsers that don't support clipboard API
+        const textArea = document.createElement('textarea');
+        textArea.value = link;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert(`Celebration link copied to clipboard!\n\n${link}\n\nShare this link with your team to celebrate the winners!`);
+      });
+    }
+  </script>
+</body>
+</html>

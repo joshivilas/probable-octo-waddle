@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Winners List 🎊</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 400px;
+      animation: pop 0.6s ease;
+      position: relative;
+      z-index: 2;
+    }
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: #0077ff;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #e0f0ff;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #0077ff;
+      transition: transform 0.3s;
+    }
+    li:hover {
+      transform: scale(1.05);
+      background: #b3e5fc;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="container">
+    <h1>🎊 Winners 🎊</h1>
+    <ul id="winnerList"></ul>
+  </div>
+
+  <script>
+    // Load winners from hash
+    function loadWinners() {
+      const hash = window.location.hash.substring(1);
+      if(!hash) return;
+      try {
+        const decoded = JSON.parse(atob(decodeURIComponent(hash)));
+        const list = document.getElementById('winnerList');
+        decoded.forEach(name => {
+          const li = document.createElement('li');
+          li.textContent = name;
+          list.appendChild(li);
+        });
+      } catch(e) {
+        alert("Invalid winner data!");
+      }
+    }
+    loadWinners();
+
+    // Confetti animation
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confettiPieces = [];
+    const colors = ['#ff6f61','#ffcc00','#0077ff','#00c853','#9c27b0'];
+
+    function ConfettiPiece() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height - canvas.height;
+      this.size = Math.random() * 8 + 4;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.speed = Math.random() * 3 + 2;
+      this.angle = Math.random() * 360;
+    }
+
+    function createConfetti() {
+      for(let i=0; i<150; i++) {
+        confettiPieces.push(new ConfettiPiece());
+      }
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      confettiPieces.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fill();
+        p.y += p.speed;
+        if(p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawConfetti);
+    }
+
+    createConfetti();
+    drawConfetti();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>

@@ -2,95 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Winner Declare 🎉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Probable Octo Waddle - Tools Collection</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       margin: 0;
-    }
-    .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      text-align: center;
-      width: 350px;
-    }
-    h1 {
-      margin-bottom: 1rem;
-      color: #ff6f61;
-    }
-    input {
-      width: 80%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border: 2px solid #ff6f61;
-      border-radius: 8px;
-    }
-    button {
-      background: #ff6f61;
-      color: white;
-      border: none;
-      padding: 0.7rem 1.2rem;
-      margin-top: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #ff3b2e;
-    }
-    ul {
-      list-style: none;
       padding: 0;
-      margin-top: 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    li {
-      background: #ffe0dc;
-      margin: 5px 0;
-      padding: 5px;
-      border-radius: 6px;
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 2rem;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .header p {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+      opacity: 0.9;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      width: 100%;
+      padding: 0 2rem;
+    }
+    .tool-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+    }
+    .tool-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .tool-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .tool-description {
+      color: #666;
+      line-height: 1.5;
+    }
+    .coming-soon {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .coming-soon .tool-title::after {
+      content: " (Coming Soon)";
+      font-size: 0.8rem;
+      color: #999;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🏆 Declare Winners</h1>
-    <input type="text" id="winnerInput" placeholder="Enter winner name">
-    <button onclick="addWinner()">Add</button>
-    <ul id="winnerList"></ul>
-    <button onclick="goToWinners()">Show Winners 🎉</button>
+  <div class="header">
+    <h1>🎯 Probable Octo Waddle</h1>
+    <p>A collection of fun and useful tools</p>
   </div>
 
-  <script>
-    let winners = [];
+  <div class="tools-grid">
+    <a href="celebrate/Celebrate-winner.html" class="tool-card">
+      <div class="tool-icon">🏆</div>
+      <div class="tool-title">Winner Declaration</div>
+      <div class="tool-description">
+        Declare winners and create shareable celebration links for your team.
+        Add names and generate a unique URL to share the excitement!
+      </div>
+    </a>
 
-    function addWinner() {
-      const input = document.getElementById('winnerInput');
-      const name = input.value.trim();
-      if(name) {
-        winners.push(name);
-        const li = document.createElement('li');
-        li.textContent = name;
-        document.getElementById('winnerList').appendChild(li);
-        input.value = '';
-      }
-    }
-
-    function goToWinners() {
-      if(winners.length === 0) {
-        alert("Please add at least one winner!");
-        return;
-      }
-      // Create a unique hash from winners list
-      const encoded = encodeURIComponent(btoa(JSON.stringify(winners)));
-      window.location.href = `winners.html#${encoded}`;
-    }
-  </script>
+    <!-- Placeholder for future tools -->
+    <div class="tool-card coming-soon">
+      <div class="tool-icon">🚀</div>
+      <div class="tool-title">New Tool</div>
+      <div class="tool-description">
+        Exciting new tools coming soon! Stay tuned for more fun utilities.
+      </div>
+    </div>
+  </div>
 </body>
 </html>
