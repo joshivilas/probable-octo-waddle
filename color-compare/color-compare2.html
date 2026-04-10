@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Compare</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1rem 1.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      color: #86868b;
+      margin-top: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .inputs {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 1rem;
+    }
+
+    .color-input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .color-input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #86868b;
+    }
+
+    .hex-field {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 2px solid #d2d2d7;
+      border-radius: 12px;
+      padding: 0.5rem 0.75rem;
+      transition: border-color 0.2s;
+    }
+
+    .hex-field:focus-within {
+      border-color: #0071e3;
+    }
+
+    .hex-field span {
+      font-size: 1.1rem;
+      color: #86868b;
+      margin-right: 2px;
+      user-select: none;
+    }
+
+    .hex-field input[type="text"] {
+      border: none;
+      outline: none;
+      font-size: 1.1rem;
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      width: 7ch;
+      text-transform: uppercase;
+      background: transparent;
+    }
+
+    .hex-field input[type="color"] {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 0.5rem;
+      padding: 0;
+      background: none;
+    }
+
+    .hex-field input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    .hex-field input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+
+    .swap-btn {
+      align-self: center;
+      background: #fff;
+      border: 2px solid #d2d2d7;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #86868b;
+      transition: all 0.2s;
+      margin-top: 1.4rem;
+    }
+
+    .swap-btn:hover {
+      border-color: #0071e3;
+      color: #0071e3;
+      transform: rotate(180deg);
+    }
+
+    /* Preview Section */
+    .preview-section {
+      width: 100%;
+      max-width: 900px;
+      padding: 2rem 1rem;
+    }
+
+    .side-by-side {
+      display: flex;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      height: 220px;
+      transition: box-shadow 0.3s;
+    }
+
+    .side-by-side:hover {
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    }
+
+    .swatch {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background-color 0.3s;
+      position: relative;
+    }
+
+    .swatch .hex-label {
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 1.3rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    .swatch .color-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.15rem 0.6rem;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+    }
+
+    .divider-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.85);
+      color: #1d1d1f;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    /* Gradient blend */
+    .gradient-bar {
+      margin-top: 1.5rem;
+      height: 60px;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: background 0.3s;
+    }
+
+    /* Details cards */
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .detail-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .detail-card h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #86868b;
+      margin-bottom: 0.8rem;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+    }
+
+    .detail-row span:first-child { color: #86868b; }
+    .detail-row span:last-child { font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace; font-weight: 500; }
+
+    /* Contrast badge */
+    .contrast-section {
+      margin-top: 1.5rem;
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+
+    .contrast-section h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #86868b;
+      margin-bottom: 0.8rem;
+    }
+
+    .contrast-ratio {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .contrast-badges {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge.pass { background: #d1f5d3; color: #1a7a2e; }
+    .badge.fail { background: #fdd; color: #c0392b; }
+
+    /* Text preview */
+    .text-preview {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .text-preview-card {
+      border-radius: 16px;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .text-preview-card .large { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .text-preview-card .small { font-size: 0.9rem; }
+
+    footer {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: #86868b;
+      font-size: 0.8rem;
+    }
+
+    /* Mode toggle */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-toggle span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #86868b;
+      transition: color 0.2s;
+    }
+
+    .mode-toggle span.active {
+      color: #1d1d1f;
+    }
+
+    .toggle-track {
+      width: 48px;
+      height: 26px;
+      background: #d2d2d7;
+      border-radius: 13px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.25s;
+      border: none;
+      padding: 0;
+    }
+
+    .toggle-track.on {
+      background: #0071e3;
+    }
+
+    .toggle-thumb {
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.25s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .toggle-track.on .toggle-thumb {
+      transform: translateX(22px);
+    }
+
+    .alpha-hint {
+      display: none;
+      font-size: 0.75rem;
+      color: #86868b;
+      text-align: center;
+      margin-top: -0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .alpha-hint.visible { display: block; }
+
+    @media (max-width: 600px) {
+      .inputs { gap: 1rem; }
+      .swap-btn { margin-top: 0; }
+      .details, .text-preview { grid-template-columns: 1fr; }
+      .side-by-side { height: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Color Compare</h1>
+    <p>Enter two hex codes to compare them side by side</p>
+  </header>
+
+  <div class="mode-toggle">
+    <span class="active" id="labelRgb">HEX</span>
+    <button class="toggle-track" id="modeToggle" aria-label="Toggle ARGB mode">
+      <div class="toggle-thumb"></div>
+    </button>
+    <span id="labelArgb">ARGB</span>
+  </div>
+  <div class="alpha-hint" id="alphaHint">First two digits are alpha (opacity), e.g. <strong>FF</strong>808080</div>
+
+  <section class="inputs">
+    <div class="color-input-group">
+      <label>Color 1</label>
+      <div class="hex-field">
+        <span>#</span>
+        <input type="text" id="hex1" maxlength="6" value="6C5CE7" placeholder="6C5CE7" data-rgb="6C5CE7" data-argb="FF6C5CE7">
+        <input type="color" id="picker1" value="#6C5CE7">
+      </div>
+    </div>
+
+    <button class="swap-btn" id="swapBtn" title="Swap colors">⇄</button>
+
+    <div class="color-input-group">
+      <label>Color 2</label>
+      <div class="hex-field">
+        <span>#</span>
+        <input type="text" id="hex2" maxlength="6" value="00B894" placeholder="00B894" data-rgb="00B894" data-argb="FF00B894">
+        <input type="color" id="picker2" value="#00B894">
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section">
+    <!-- Side-by-side swatches -->
+    <div class="side-by-side" style="position:relative;">
+      <div class="swatch" id="swatch1">
+        <span class="hex-label" id="label1">#6C5CE7</span>
+      </div>
+      <div class="divider-label">VS</div>
+      <div class="swatch" id="swatch2">
+        <span class="hex-label" id="label2">#00B894</span>
+      </div>
+    </div>
+
+    <!-- Gradient blend -->
+    <div class="gradient-bar" id="gradientBar"></div>
+
+    <!-- Detail cards -->
+    <div class="details">
+      <div class="detail-card" id="detailCard1"></div>
+      <div class="detail-card" id="detailCard2"></div>
+    </div>
+
+    <!-- Contrast -->
+    <div class="contrast-section">
+      <h3>Contrast Ratio</h3>
+      <div class="contrast-ratio" id="contrastValue">—</div>
+      <div class="contrast-badges" id="contrastBadges"></div>
+    </div>
+
+    <!-- Text preview -->
+    <div class="text-preview">
+      <div class="text-preview-card" id="textPreview1">
+        <div class="large">Large Text</div>
+        <div class="small">Small body text sample</div>
+      </div>
+      <div class="text-preview-card" id="textPreview2">
+        <div class="large">Large Text</div>
+        <div class="small">Small body text sample</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Color Compare &mdash; Paste any hex code and see the difference</footer>
+
+  <script>
+    const hex1El = document.getElementById('hex1');
+    const hex2El = document.getElementById('hex2');
+    const picker1 = document.getElementById('picker1');
+    const picker2 = document.getElementById('picker2');
+    const modeToggle = document.getElementById('modeToggle');
+    const labelRgb = document.getElementById('labelRgb');
+    const labelArgb = document.getElementById('labelArgb');
+    const alphaHint = document.getElementById('alphaHint');
+
+    let argbMode = false;
+
+    function maxLen() { return argbMode ? 8 : 6; }
+
+    function sanitizeHex(raw) {
+      return raw.replace(/[^0-9a-fA-F]/g, '').slice(0, maxLen());
+    }
+
+    function isValidHex(h) {
+      if (argbMode) return /^[0-9a-fA-F]{8}$/.test(h);
+      return /^[0-9a-fA-F]{6}$/.test(h);
+    }
+
+    // Parse ARGB or RGB string into { a, r, g, b } (a = 0-255)
+    function parseColor(raw) {
+      if (argbMode) {
+        const a = parseInt(raw.slice(0, 2), 16);
+        const r = parseInt(raw.slice(2, 4), 16);
+        const g = parseInt(raw.slice(4, 6), 16);
+        const b = parseInt(raw.slice(6, 8), 16);
+        return { a, r, g, b };
+      }
+      const n = parseInt(raw, 16);
+      return { a: 255, r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+    }
+
+    function hexToRgb(hex) {
+      const n = parseInt(hex.slice(argbMode ? 2 : 0), 16);
+      return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+          case g: h = ((b - r) / d + 2) / 6; break;
+          case b: h = ((r - g) / d + 4) / 6; break;
+        }
+      }
+      return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100)
+      };
+    }
+
+    function luminance(r, g, b) {
+      const arr = [r, g, b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * arr[0] + 0.7152 * arr[1] + 0.0722 * arr[2];
+    }
+
+    function contrastRatio(hex1, hex2) {
+      const c1 = hexToRgb(hex1), c2 = hexToRgb(hex2);
+      const l1 = luminance(c1.r, c1.g, c1.b);
+      const l2 = luminance(c2.r, c2.g, c2.b);
+      const lighter = Math.max(l1, l2), darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function textColor(hex) {
+      const { r, g, b } = hexToRgb(hex);
+      return luminance(r, g, b) > 0.4 ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.95)';
+    }
+
+    // Build CSS color string with alpha
+    function toCssColor(raw) {
+      const { a, r, g, b } = parseColor(raw);
+      if (a === 255) return `rgb(${r}, ${g}, ${b})`;
+      return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(2)})`;
+    }
+
+    function buildDetailCard(el, raw) {
+      const { a, r, g, b } = parseColor(raw);
+      const { h, s, l } = rgbToHsl(r, g, b);
+      const alphaRow = argbMode
+        ? `<div class="detail-row"><span>Alpha</span><span>${a} (${Math.round(a / 255 * 100)}%)</span></div>`
+        : '';
+      el.innerHTML = `
+        <h3>#${raw.toUpperCase()}</h3>
+        ${alphaRow}
+        <div class="detail-row"><span>RGB</span><span>${r}, ${g}, ${b}</span></div>
+        <div class="detail-row"><span>HSL</span><span>${h}°, ${s}%, ${l}%</span></div>
+        <div class="detail-row"><span>Luminance</span><span>${luminance(r, g, b).toFixed(3)}</span></div>
+      `;
+    }
+
+    function update() {
+      const raw1 = sanitizeHex(hex1El.value);
+      const raw2 = sanitizeHex(hex2El.value);
+      hex1El.value = raw1.toUpperCase();
+      hex2El.value = raw2.toUpperCase();
+
+      const v1 = isValidHex(raw1), v2 = isValidHex(raw2);
+      if (!v1 || !v2) return;
+
+      const css1 = toCssColor(raw1), css2 = toCssColor(raw2);
+      const rgb6_1 = raw1.slice(argbMode ? 2 : 0);
+      const rgb6_2 = raw2.slice(argbMode ? 2 : 0);
+
+      // Sync pickers (pickers only support 6-digit hex)
+      picker1.value = '#' + rgb6_1;
+      picker2.value = '#' + rgb6_2;
+
+      // Swatches
+      const swatch1 = document.getElementById('swatch1');
+      const swatch2 = document.getElementById('swatch2');
+      swatch1.style.backgroundColor = css1;
+      swatch2.style.backgroundColor = css2;
+
+      const label1 = document.getElementById('label1');
+      const label2 = document.getElementById('label2');
+      label1.textContent = '#' + raw1.toUpperCase();
+      label2.textContent = '#' + raw2.toUpperCase();
+      label1.style.color = textColor(raw1);
+      label2.style.color = textColor(raw2);
+      label1.style.background = textColor(raw1) === 'rgba(0,0,0,0.8)' ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.15)';
+      label2.style.background = textColor(raw2) === 'rgba(0,0,0,0.8)' ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.15)';
+
+      // Gradient
+      document.getElementById('gradientBar').style.background = `linear-gradient(to right, ${css1}, ${css2})`;
+
+      // Details
+      buildDetailCard(document.getElementById('detailCard1'), raw1);
+      buildDetailCard(document.getElementById('detailCard2'), raw2);
+
+      // Contrast (based on RGB portion only)
+      const ratio = contrastRatio(raw1, raw2);
+      document.getElementById('contrastValue').textContent = ratio.toFixed(2) + ' : 1';
+
+      const badges = document.getElementById('contrastBadges');
+      const aaLarge = ratio >= 3;
+      const aa = ratio >= 4.5;
+      const aaa = ratio >= 7;
+      badges.innerHTML = `
+        <span class="badge ${aaa ? 'pass' : 'fail'}">AAA ${aaa ? '✓' : '✗'}</span>
+        <span class="badge ${aa ? 'pass' : 'fail'}">AA ${aa ? '✓' : '✗'}</span>
+        <span class="badge ${aaLarge ? 'pass' : 'fail'}">AA Large ${aaLarge ? '✓' : '✗'}</span>
+      `;
+
+      // Text preview cards
+      const tp1 = document.getElementById('textPreview1');
+      const tp2 = document.getElementById('textPreview2');
+      tp1.style.backgroundColor = css1;
+      tp1.style.color = css2;
+      tp2.style.backgroundColor = css2;
+      tp2.style.color = css1;
+    }
+
+    // --- Mode toggle ---
+    modeToggle.addEventListener('click', () => {
+      argbMode = !argbMode;
+      modeToggle.classList.toggle('on', argbMode);
+      labelRgb.classList.toggle('active', !argbMode);
+      labelArgb.classList.toggle('active', argbMode);
+      alphaHint.classList.toggle('visible', argbMode);
+
+      const len = maxLen();
+      hex1El.maxLength = len;
+      hex2El.maxLength = len;
+
+      if (argbMode) {
+        // Expand 6→8 by prepending FF
+        hex1El.placeholder = 'FF6C5CE7';
+        hex2El.placeholder = 'FF00B894';
+        if (hex1El.value.length === 6) hex1El.value = 'FF' + hex1El.value;
+        if (hex2El.value.length === 6) hex2El.value = 'FF' + hex2El.value;
+        hex1El.style.width = '9ch';
+        hex2El.style.width = '9ch';
+      } else {
+        // Collapse 8→6 by stripping first 2 chars
+        hex1El.placeholder = '6C5CE7';
+        hex2El.placeholder = '00B894';
+        if (hex1El.value.length === 8) hex1El.value = hex1El.value.slice(2);
+        if (hex2El.value.length === 8) hex2El.value = hex2El.value.slice(2);
+        hex1El.style.width = '7ch';
+        hex2El.style.width = '7ch';
+      }
+      update();
+    });
+
+    // Input listeners
+    hex1El.addEventListener('input', update);
+    hex2El.addEventListener('input', update);
+
+    picker1.addEventListener('input', () => {
+      const rgb = picker1.value.slice(1).toUpperCase();
+      hex1El.value = argbMode ? 'FF' + rgb : rgb;
+      update();
+    });
+
+    picker2.addEventListener('input', () => {
+      const rgb = picker2.value.slice(1).toUpperCase();
+      hex2El.value = argbMode ? 'FF' + rgb : rgb;
+      update();
+    });
+
+    document.getElementById('swapBtn').addEventListener('click', () => {
+      const tmp = hex1El.value;
+      hex1El.value = hex2El.value;
+      hex2El.value = tmp;
+      update();
+    });
+
+    // Paste support: strip "#" automatically
+    [hex1El, hex2El].forEach(el => {
+      el.addEventListener('paste', e => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text');
+        el.value = sanitizeHex(text.replace('#', ''));
+        update();
+      });
+    });
+
+    // Init
+    update();
+  </script>
+</body>
+</html>
