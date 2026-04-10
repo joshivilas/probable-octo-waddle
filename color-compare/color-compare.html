@@ -1,0 +1,843 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Compare Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            width: 98vw;
+            height: 98vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 24px 24px 0 0;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.95em;
+            opacity: 0.95;
+            margin-bottom: 0;
+        }
+
+        .toggle-container {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: 0.4s;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            gap: 0;
+        }
+
+        .left-panel {
+            flex: 0.3;
+            background: #f8f9ff;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+            border-right: 1px solid #e0e5ff;
+        }
+
+        .controls {
+            display: none;
+        }
+
+        .color-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .color-input-group label {
+            font-weight: 700;
+            color: #333;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .hex-input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 2px solid #e0e5ff;
+            border-radius: 10px;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            background: white;
+            color: #333;
+        }
+
+        .hex-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .hex-input::placeholder {
+            color: #bbb;
+        }
+
+        .color-picker-btn {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #e0e5ff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+        }
+
+        .color-picker-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.8em;
+            display: none;
+            margin-top: -5px;
+        }
+
+        .middle-panel {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 25px;
+            background: white;
+            overflow: hidden;
+        }
+
+        .preview-section {
+            display: contents;
+        }
+
+        .color-preview {
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border: 1px solid #f0f0f0;
+        }
+
+        .color-preview:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+        }
+
+        .color-display {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.1s;
+            position: relative;
+            min-height: 120px;
+        }
+
+        .color-display::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%);
+            pointer-events: none;
+        }
+
+        .color-info {
+            background: white;
+            padding: 16px;
+            text-align: center;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .color-hex {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .color-rgb {
+            color: #999;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .right-panel {
+            flex: 0.35;
+            background: #f8f9ff;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #e0e5ff;
+            overflow: hidden;
+        }
+
+        .comparison-section {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            flex: 0.7;
+            overflow-y: auto;
+        }
+
+        .comparison-section h2 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            overflow-y: auto;
+            padding-right: 8px;
+            flex: 1;
+        }
+
+        .comparison-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .comparison-grid::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .comparison-grid::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 3px;
+        }
+
+        .comparison-grid::-webkit-scrollbar-thumb:hover {
+            background: #bbb;
+        }
+
+        .comparison-item {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e5ff;
+            transition: all 0.3s;
+        }
+
+        .comparison-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.1);
+        }
+
+        .comparison-label {
+            font-size: 0.8em;
+            color: #999;
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .comparison-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #667eea;
+            word-break: break-all;
+            font-size: 0.9em;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        button.action-btn {
+            flex: 1;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        button.add-btn {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(81, 207, 102, 0.3);
+        }
+
+        button.add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(81, 207, 102, 0.4);
+        }
+
+        button.clear-btn {
+            background: linear-gradient(135deg, #ff8787 0%, #ff6b6b 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        button.clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+        }
+
+        button.clear-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        button.clear-btn:hover {
+            background: #ee5a52;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        button.add-btn {
+            background: #51cf66;
+            color: white;
+        }
+
+        button.add-btn:hover {
+            background: #40c057;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(81, 207, 102, 0.3);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .middle-panel {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .content {
+                flex-direction: column;
+            }
+
+            .left-panel,
+            .right-panel {
+                flex: auto;
+            }
+
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid #e0e5ff;
+            }
+
+            .right-panel {
+                border-left: none;
+            }
+
+            .comparison-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 16px;
+            }
+
+            .header {
+                border-radius: 16px 16px 0 0;
+                padding: 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .left-panel,
+            .right-panel {
+                padding: 15px;
+            }
+
+            .middle-panel {
+                padding: 15px;
+                gap: 12px;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Color Compare</h1>
+            <p>Compare and analyze your favorite colors in real-time</p>
+            <div class="toggle-container">
+                <span class="toggle-label">Hex</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="argbToggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="toggle-label">ARGB</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="left-panel">
+                <div class="color-input-group">
+                    <label for="color1">Color 1</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="color1" class="hex-input" placeholder="#667eea" value="#667eea">
+                        <button class="color-picker-btn" id="picker1" style="background-color: #667eea;"></button>
+                    </div>
+                    <div class="error-message" id="error1"></div>
+                </div>
+
+                <div class="color-input-group">
+                    <label for="color2">Color 2</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="color2" class="hex-input" placeholder="#764ba2" value="#764ba2">
+                        <button class="color-picker-btn" id="picker2" style="background-color: #764ba2;"></button>
+                    </div>
+                    <div class="error-message" id="error2"></div>
+                </div>
+
+                <div class="color-input-group">
+                    <label for="color3">Color 3</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="color3" class="hex-input" placeholder="#50fa7b" value="#50fa7b">
+                        <button class="color-picker-btn" id="picker3" style="background-color: #50fa7b;"></button>
+                    </div>
+                    <div class="error-message" id="error3"></div>
+                </div>
+
+                <div style="flex: 1;"></div>
+
+                <div class="buttons">
+                    <button class="action-btn add-btn" id="addColorBtn">+ Add</button>
+                    <button class="action-btn clear-btn" id="clearBtn">Clear</button>
+                </div>
+            </div>
+
+            <div class="middle-panel" id="previewSection">
+                <div class="color-preview">
+                    <div class="color-display" id="display1"></div>
+                    <div class="color-info">
+                        <div class="color-hex" id="hex1">#667eea</div>
+                        <div class="color-rgb" id="rgb1">RGB(102, 126, 234)</div>
+                    </div>
+                </div>
+
+                <div class="color-preview">
+                    <div class="color-display" id="display2"></div>
+                    <div class="color-info">
+                        <div class="color-hex" id="hex2">#764ba2</div>
+                        <div class="color-rgb" id="rgb2">RGB(118, 75, 162)</div>
+                    </div>
+                </div>
+
+                <div class="color-preview">
+                    <div class="color-display" id="display3"></div>
+                    <div class="color-info">
+                        <div class="color-hex" id="hex3">#50fa7b</div>
+                        <div class="color-rgb" id="rgb3">RGB(80, 250, 123)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="comparison-section">
+                    <h2>Data</h2>
+                    <div class="comparison-grid" id="comparisonGrid">
+                        <div class="comparison-item">
+                            <div class="comparison-label">Color 1 HEX</div>
+                            <div class="comparison-value" id="comp-hex1">#667eea</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">Color 2 HEX</div>
+                            <div class="comparison-value" id="comp-hex2">#764ba2</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">Color 3 HEX</div>
+                            <div class="comparison-value" id="comp-hex3">#50fa7b</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">Color 1 RGB</div>
+                            <div class="comparison-value" id="comp-rgb1">102, 126, 234</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">Color 2 RGB</div>
+                            <div class="comparison-value" id="comp-rgb2">118, 75, 162</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">Color 3 RGB</div>
+                            <div class="comparison-value" id="comp-rgb3">80, 250, 123</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colorInputs = ['color1', 'color2', 'color3'];
+        const colorCount = { current: 3 };
+        let isARGBMode = false;
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function hexToArgb(hex, alpha = 255) {
+            const rgb = hexToRgb(hex);
+            if (!rgb) return null;
+            return {
+                a: alpha,
+                r: rgb.r,
+                g: rgb.g,
+                b: rgb.b
+            };
+        }
+
+        function argbToString(argb) {
+            const a = argb.a.toString(16).padStart(2, '0').toUpperCase();
+            const r = argb.r.toString(16).padStart(2, '0').toUpperCase();
+            const g = argb.g.toString(16).padStart(2, '0').toUpperCase();
+            const b = argb.b.toString(16).padStart(2, '0').toUpperCase();
+            return `#${a}${r}${g}${b}`;
+        }
+
+        function isValidHex(hex) {
+            // In HEX mode: only accept 6-char format
+            // In ARGB mode: accept both 6-char and 8-char formats
+            if (isARGBMode) {
+                return /^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(hex);
+            } else {
+                return /^#[0-9A-F]{6}$/i.test(hex);
+            }
+        }
+
+        function extractRgbFromInput(hex) {
+            // Extract RGB from either 6-char or 8-char format
+            let cleanHex = hex.replace('#', '').toUpperCase();
+            if (cleanHex.length === 8) {
+                // ARGB format - take last 6 chars (RGB)
+                cleanHex = cleanHex.substring(2);
+            }
+            return '#' + cleanHex;
+        }
+
+        function updateColor(colorNum) {
+            const input = document.getElementById(`color${colorNum}`);
+            let hex = input.value.trim();
+            const errorDiv = document.getElementById(`error${colorNum}`);
+
+            if (!hex) {
+                errorDiv.style.display = 'none';
+                return;
+            }
+
+            if (!isValidHex(hex)) {
+                const formatMsg = isARGBMode 
+                    ? 'Use hex (e.g., #667eea) or ARGB (e.g., #FF667eea)' 
+                    : 'Use hex format (e.g., #667eea)';
+                errorDiv.textContent = formatMsg;
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            errorDiv.style.display = 'none';
+            
+            // Extract RGB from input (handles both 6-char and 8-char formats)
+            const rgbHex = extractRgbFromInput(hex);
+            const rgb = hexToRgb(rgbHex);
+            const normalizedHex = rgbHex.toUpperCase();
+
+            document.getElementById(`display${colorNum}`).style.backgroundColor = normalizedHex;
+            document.getElementById(`hex${colorNum}`).textContent = normalizedHex;
+            document.getElementById(`rgb${colorNum}`).textContent = `RGB(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+
+            // Update comparison data
+            if (isARGBMode) {
+                // Extract alpha if provided in 8-char format
+                let alpha = 255;
+                if (hex.length === 9) { // #AARRGGBB
+                    alpha = parseInt(hex.substring(1, 3), 16);
+                }
+                const argb = hexToArgb(normalizedHex, alpha);
+                document.getElementById(`comp-hex${colorNum}`).textContent = argbToString(argb);
+                document.getElementById(`comp-rgb${colorNum}`).textContent = `${argb.a}, ${argb.r}, ${argb.g}, ${argb.b}`;
+            } else {
+                document.getElementById(`comp-hex${colorNum}`).textContent = normalizedHex;
+                document.getElementById(`comp-rgb${colorNum}`).textContent = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
+            }
+
+            const pickerBtn = document.getElementById(`picker${colorNum}`);
+            if (pickerBtn) {
+                pickerBtn.style.backgroundColor = normalizedHex;
+            }
+        }
+
+        function addColor() {
+            colorCount.current++;
+            const colorNum = colorCount.current;
+            
+            const leftPanel = document.querySelector('.left-panel');
+            const newColorInput = document.createElement('div');
+            newColorInput.className = 'color-input-group';
+            newColorInput.id = `colorGroup${colorNum}`;
+            newColorInput.innerHTML = `
+                <label for="color${colorNum}">Color ${colorNum}</label>
+                <div class="input-wrapper">
+                    <input type="text" id="color${colorNum}" class="hex-input" placeholder="#FFFFFF" value="#FFFFFF">
+                    <button class="color-picker-btn" id="picker${colorNum}" style="background-color: #FFFFFF;"></button>
+                </div>
+                <div class="error-message" id="error${colorNum}"></div>
+            `;
+            leftPanel.insertBefore(newColorInput, leftPanel.querySelector('.buttons'));
+
+            const previewSection = document.getElementById('previewSection');
+            const newPreview = document.createElement('div');
+            newPreview.className = 'color-preview';
+            newPreview.id = `preview${colorNum}`;
+            newPreview.innerHTML = `
+                <div class="color-display" id="display${colorNum}" style="background-color: #FFFFFF;"></div>
+                <div class="color-info">
+                    <div class="color-hex" id="hex${colorNum}">#FFFFFF</div>
+                    <div class="color-rgb" id="rgb${colorNum}">RGB(255, 255, 255)</div>
+                </div>
+            `;
+            previewSection.appendChild(newPreview);
+
+            const comparisonGrid = document.getElementById('comparisonGrid');
+            const hexItem = document.createElement('div');
+            hexItem.className = 'comparison-item';
+            hexItem.innerHTML = `
+                <div class="comparison-label">Color ${colorNum} HEX</div>
+                <div class="comparison-value" id="comp-hex${colorNum}">#FFFFFF</div>
+            `;
+            comparisonGrid.appendChild(hexItem);
+
+            const rgbItem = document.createElement('div');
+            rgbItem.className = 'comparison-item';
+            rgbItem.innerHTML = `
+                <div class="comparison-label">Color ${colorNum} RGB</div>
+                <div class="comparison-value" id="comp-rgb${colorNum}">255, 255, 255</div>
+            `;
+            comparisonGrid.appendChild(rgbItem);
+
+            const input = document.getElementById(`color${colorNum}`);
+            const picker = document.getElementById(`picker${colorNum}`);
+
+            input.addEventListener('input', () => updateColor(colorNum));
+            picker.addEventListener('click', () => {
+                const tempInput = document.createElement('input');
+                tempInput.type = 'color';
+                tempInput.value = input.value || '#FFFFFF';
+                tempInput.addEventListener('change', () => {
+                    input.value = tempInput.value;
+                    updateColor(colorNum);
+                });
+                tempInput.click();
+            });
+
+            updateColor(colorNum);
+        }
+
+        function clearAll() {
+            for (let i = 1; i <= colorCount.current; i++) {
+                const input = document.getElementById(`color${i}`);
+                if (input) {
+                    input.value = '';
+                }
+            }
+            colorCount.current = 3;
+            location.reload();
+        }
+
+        colorInputs.forEach(colorId => {
+            const colorNum = colorId.replace('color', '');
+            const input = document.getElementById(colorId);
+            const picker = document.getElementById(`picker${colorNum}`);
+
+            input.addEventListener('input', () => updateColor(colorNum));
+            
+            picker.addEventListener('click', () => {
+                const tempInput = document.createElement('input');
+                tempInput.type = 'color';
+                tempInput.value = input.value || '#FFFFFF';
+                tempInput.addEventListener('change', () => {
+                    input.value = tempInput.value;
+                    updateColor(colorNum);
+                });
+                tempInput.click();
+            });
+        });
+
+        document.getElementById('addColorBtn').addEventListener('click', addColor);
+        document.getElementById('clearBtn').addEventListener('click', clearAll);
+
+        // ARGB Toggle listener
+        document.getElementById('argbToggle').addEventListener('change', function() {
+            isARGBMode = this.checked;
+            
+            // Update all color displays
+            for (let i = 1; i <= colorCount.current; i++) {
+                const input = document.getElementById(`color${i}`);
+                if (input && input.value) {
+                    updateColor(i);
+                }
+            }
+            
+            // Update comparison section labels
+            const labels = document.querySelectorAll('.comparison-label');
+            labels.forEach((label, index) => {
+                if (index % 2 === 0) {
+                    // HEX label
+                    const colorNum = (Math.floor(index / 2) % colorCount.current) + 1;
+                    label.textContent = isARGBMode ? `Color ${colorNum} ARGB` : `Color ${colorNum} HEX`;
+                } else {
+                    // RGB label
+                    const colorNum = (Math.floor(index / 2) % colorCount.current) + 1;
+                    label.textContent = isARGBMode ? `Color ${colorNum} Values` : `Color ${colorNum} RGB`;
+                }
+            });
+        });
+
+        for (let i = 1; i <= 3; i++) {
+            updateColor(i);
+        }
+    </script>
+</body>
+</html>
