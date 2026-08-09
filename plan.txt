@@ -1,2 +1,7 @@
 Ideas:
 - color compare ✅
+    - Color constrast ration feature
+- metronome ✅
+    - Web Audio API for accurate timing
+    - Real-time BPM adjustment
+    - Visual beat indicator

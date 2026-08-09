@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metronome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* BPM Display Section */
+        .bpm-display-section {
+            margin-bottom: 30px;
+        }
+
+        .bpm-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .bpm-display {
+            font-size: 48px;
+            color: #667eea;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+
+        /* Tempo Control Section */
+        .control-section {
+            margin-bottom: 30px;
+        }
+
+        .control-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .tempo-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #ddd, #667eea);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            transition: background 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #764ba2;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            transition: background 0.2s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #764ba2;
+        }
+
+        .tempo-input {
+            width: 60px;
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            transition: border-color 0.3s;
+        }
+
+        .tempo-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Visual Beat Indicator */
+        .beat-indicator {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            border: 4px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.1s ease-out;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .beat-indicator.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.5), inset 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Control Buttons Section */
+        .button-section {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .start-stop-btn {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .start-stop-btn:hover {
+            background: #764ba2;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .start-stop-btn:active {
+            transform: translateY(0);
+        }
+
+        .start-stop-btn.running {
+            background: #f56565;
+        }
+
+        .start-stop-btn.running:hover {
+            background: #e53e3e;
+        }
+
+        .reset-btn {
+            background: #e2e8f0;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .reset-btn:hover {
+            background: #cbd5e0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Info Section */
+        .info-section {
+            font-size: 12px;
+            color: #999;
+            line-height: 1.6;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+
+            .bpm-display {
+                font-size: 40px;
+            }
+
+            .beat-indicator {
+                width: 100px;
+                height: 100px;
+            }
+
+            button {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Metronome</h1>
+
+        <!-- Beat Visual Indicator -->
+        <div class="beat-indicator" id="beatIndicator">Ready</div>
+
+        <!-- BPM Display Section -->
+        <div class="bpm-display-section">
+            <div class="bpm-label">Tempo</div>
+            <div class="bpm-display" id="bpmDisplay">120</div>
+        </div>
+
+        <!-- Tempo Control Section -->
+        <div class="control-section">
+            <label class="control-label">Beats Per Minute (BPM)</label>
+            <div class="tempo-controls">
+                <input type="range" id="tempoSlider" min="30" max="240" value="120" aria-label="Tempo slider">
+                <input type="number" id="tempoInput" min="30" max="240" value="120" class="tempo-input" aria-label="Tempo input">
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="button-section">
+            <button class="start-stop-btn" id="startStopBtn">Start</button>
+            <button class="reset-btn" id="resetBtn">Reset</button>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <p>Use the slider or input field to adjust tempo while playing.</p>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * ===== METRONOME APPLICATION =====
+         * A pure JavaScript metronome using Web Audio API for accurate timing
+         * and visual feedback synchronization.
+         */
+
+        // ===== STATE MANAGEMENT =====
+        const state = {
+            isRunning: false,
+            bpm: 120,
+            nextBeatTime: 0,
+            audioContext: null,
+            schedulerId: null,
+            lookAheadTime: 25, // milliseconds - how far ahead to schedule beats
+            scheduleAheadTime: 0.1, // seconds - scheduler look ahead window
+        };
+
+        // ===== DOM ELEMENTS =====
+        const elements = {
+            bpmDisplay: document.getElementById('bpmDisplay'),
+            tempoSlider: document.getElementById('tempoSlider'),
+            tempoInput: document.getElementById('tempoInput'),
+            startStopBtn: document.getElementById('startStopBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            beatIndicator: document.getElementById('beatIndicator'),
+        };
+
+        /**
+         * Initialize the Web Audio Context
+         * This is required for playing sounds with the Web Audio API
+         */
+        function initializeAudioContext() {
+            if (state.audioContext === null) {
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            // Resume audio context if suspended (required by modern browsers)
+            if (state.audioContext.state === 'suspended') {
+                state.audioContext.resume();
+            }
+            return state.audioContext;
+        }
+
+        /**
+         * Generate and play a click sound using Web Audio API
+         * Creates a short beep tone without external files
+         */
+        function playClickSound() {
+            const context = initializeAudioContext();
+            const now = context.currentTime;
+            const duration = 0.1; // 100ms duration
+            const frequency = 1000; // Hz - frequency of the beep
+
+            // Create oscillator for the beep sound
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+
+            // Set sound properties
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+
+            // Envelope: attack and release for a natural sound
+            gainNode.gain.setValueAtTime(0.3, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+            // Play the sound
+            oscillator.start(now);
+            oscillator.stop(now + duration);
+        }
+
+        /**
+         * Trigger visual beat indication
+         * Adds a flash effect to the beat indicator circle
+         */
+        function triggerBeatVisualization() {
+            elements.beatIndicator.classList.add('active');
+
+            // Remove active class after brief duration for flash effect
+            setTimeout(() => {
+                elements.beatIndicator.classList.remove('active');
+            }, 150);
+        }
+
+        /**
+         * Schedule beats in advance
+         * Uses a look-ahead buffer for more accurate timing
+         * This compensates for browser scheduling limitations
+         */
+        function scheduler() {
+            // Schedule all beats that fall within the look-ahead window
+            while (state.nextBeatTime < state.audioContext.currentTime + state.scheduleAheadTime) {
+                scheduleBeat(state.nextBeatTime);
+                advanceToNextBeat();
+            }
+        }
+
+        /**
+         * Schedule a single beat at a specific time
+         * @param {number} beatTime - The time when the beat should occur
+         */
+        function scheduleBeat(beatTime) {
+            const context = initializeAudioContext();
+            const timeUntilBeat = beatTime - context.currentTime;
+
+            // Only schedule if the beat is in the near future (not in the past)
+            if (timeUntilBeat > 0 && timeUntilBeat < 1) {
+                // Schedule sound with a small delay from now
+                setTimeout(() => {
+                    playClickSound();
+                    triggerBeatVisualization();
+                }, timeUntilBeat * 1000);
+            }
+        }
+
+        /**
+         * Advance to the next beat
+         * Calculates the time of the next beat based on current BPM
+         */
+        function advanceToNextBeat() {
+            const beatLength = 60.0 / state.bpm; // seconds per beat
+            state.nextBeatTime += beatLength;
+        }
+
+        /**
+         * Main scheduler loop
+         * Runs continuously to maintain accurate beat scheduling
+         */
+        function startScheduler() {
+            const context = initializeAudioContext();
+            state.nextBeatTime = context.currentTime;
+
+            // Run scheduler at regular intervals
+            if (state.schedulerId !== null) {
+                clearInterval(state.schedulerId);
+            }
+
+            state.schedulerId = setInterval(() => {
+                if (state.isRunning) {
+                    scheduler();
+                }
+            }, state.lookAheadTime);
+        }
+
+        /**
+         * Stop the scheduler loop
+         */
+        function stopScheduler() {
+            if (state.schedulerId !== null) {
+                clearInterval(state.schedulerId);
+                state.schedulerId = null;
+            }
+        }
+
+        /**
+         * Start the metronome
+         */
+        function startMetronome() {
+            initializeAudioContext();
+            state.isRunning = true;
+            startScheduler();
+
+            // Update UI
+            elements.startStopBtn.classList.add('running');
+            elements.startStopBtn.textContent = 'Stop';
+            elements.beatIndicator.textContent = 'Playing';
+        }
+
+        /**
+         * Stop the metronome
+         */
+        function stopMetronome() {
+            state.isRunning = false;
+            stopScheduler();
+
+            // Update UI
+            elements.startStopBtn.classList.remove('running');
+            elements.startStopBtn.textContent = 'Start';
+            elements.beatIndicator.textContent = 'Stopped';
+            elements.beatIndicator.classList.remove('active');
+        }
+
+        /**
+         * Reset metronome to initial state
+         */
+        function resetMetronome() {
+            stopMetronome();
+            state.bpm = 120;
+            updateBPMDisplay();
+            elements.beatIndicator.textContent = 'Ready';
+        }
+
+        /**
+         * Update BPM value from slider or input
+         * @param {number} newBpm - The new BPM value
+         */
+        function updateBPM(newBpm) {
+            // Validate BPM is within range
+            const bpm = Math.max(30, Math.min(240, parseInt(newBpm) || 120));
+            state.bpm = bpm;
+            updateBPMDisplay();
+        }
+
+        /**
+         * Update all BPM display elements
+         */
+        function updateBPMDisplay() {
+            elements.bpmDisplay.textContent = state.bpm;
+            elements.tempoSlider.value = state.bpm;
+            elements.tempoInput.value = state.bpm;
+        }
+
+        // ===== EVENT LISTENERS =====
+
+        /**
+         * Start/Stop Button
+         */
+        elements.startStopBtn.addEventListener('click', () => {
+            if (state.isRunning) {
+                stopMetronome();
+            } else {
+                startMetronome();
+            }
+        });
+
+        /**
+         * Reset Button
+         */
+        elements.resetBtn.addEventListener('click', resetMetronome);
+
+        /**
+         * Tempo Slider Change
+         * Updates BPM when slider is moved
+         */
+        elements.tempoSlider.addEventListener('input', (e) => {
+            updateBPM(e.target.value);
+        });
+
+        /**
+         * Tempo Input Change
+         * Allows direct BPM input via text field
+         */
+        elements.tempoInput.addEventListener('change', (e) => {
+            updateBPM(e.target.value);
+        });
+
+        /**
+         * Tempo Input Real-time Validation
+         * Provides immediate feedback while typing
+         */
+        elements.tempoInput.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value) || '';
+            if (value && (value < 30 || value > 240)) {
+                // Highlight invalid input
+                e.target.style.borderColor = '#f56565';
+            } else {
+                e.target.style.borderColor = '#ddd';
+            }
+        });
+
+        // ===== INITIALIZATION =====
+        // Set initial BPM display
+        updateBPMDisplay();
+    </script>
+</body>
+</html>
