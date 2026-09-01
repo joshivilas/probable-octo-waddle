@@ -209,6 +209,9 @@
         navigator.clipboard.writeText(prompt.text).then(() => {
           copyBtn.textContent = 'Copied!';
           setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+        }).catch(() => {
+          copyBtn.textContent = 'Copy failed';
+          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
         });
       });
 
