@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompts Library - Probable Octo Waddle</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header {
+      text-align: center;
+      color: white;
+      margin: 3rem 1rem 2rem;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .header p {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+      opacity: 0.9;
+    }
+    .back-link {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      opacity: 0.9;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .back-link:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      padding: 0 2rem 3rem;
+      box-sizing: border-box;
+    }
+    .ad-slot {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px dashed rgba(255, 255, 255, 0.5);
+      border-radius: 12px;
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+    .prompt-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    .prompt-section h2 {
+      margin-top: 0;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .prompt-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .prompt-card {
+      background: #f7f7fb;
+      border: 1px solid #e0e0ef;
+      border-radius: 8px;
+      padding: 1rem;
+      position: relative;
+    }
+    .prompt-card-title {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.4rem;
+    }
+    .prompt-card-text {
+      color: #555;
+      line-height: 1.4;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+    .copy-btn {
+      margin-top: 0.75rem;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .copy-btn:hover {
+      background: #5a67d8;
+    }
+    .empty-state {
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="../index.html" class="back-link">&larr; Back to Tools</a>
+    <h1>💡 Prompts Library</h1>
+    <p>Daily prompts for text, music, video and more</p>
+  </div>
+
+  <div class="container">
+    <!-- Ad Slot: Google AdSense placeholder -->
+    <div class="ad-slot" id="ad-google">
+      <!-- TODO: Add Google AdSense code here -->
+      Ad space (Google AdSense) - to be configured
+    </div>
+
+    <div id="prompt-sections"></div>
+
+    <!-- Ad Slot: Microsoft Ads placeholder -->
+    <div class="ad-slot" id="ad-microsoft">
+      <!-- TODO: Add Microsoft Ads code here -->
+      Ad space (Microsoft Ads) - to be configured
+    </div>
+  </div>
+
+  <script>
+    // Centralized prompt data. Add new categories or prompts here as they grow.
+    // Each category renders its own section automatically, so this file stays
+    // maintainable as the prompt library scales.
+    const promptCategories = [
+      {
+        id: 'text',
+        icon: '📝',
+        title: 'Text Prompts',
+        prompts: [
+          {
+            title: 'Daily Journal Reflection',
+            text: 'Summarize the three most important things that happened today and what I learned from each.'
+          },
+          {
+            title: 'Email Polish',
+            text: 'Rewrite the following email to be more concise and professional while keeping the original intent.'
+          }
+        ]
+      },
+      {
+        id: 'music',
+        icon: '🎵',
+        title: 'Music Prompts',
+        prompts: [
+          {
+            title: 'Practice Warmup',
+            text: 'Generate a 10-minute warmup routine for practicing scales and arpeggios on guitar.'
+          }
+        ]
+      },
+      {
+        id: 'video',
+        icon: '🎬',
+        title: 'Video Prompts',
+        prompts: [
+          {
+            title: 'Short-Form Hook',
+            text: 'Write three attention-grabbing opening lines for a 30-second video about productivity tips.'
+          }
+        ]
+      },
+      {
+        id: 'other',
+        icon: '✨',
+        title: 'Other Prompts',
+        prompts: []
+      }
+    ];
+
+    function createPromptCard(prompt) {
+      const card = document.createElement('div');
+      card.className = 'prompt-card';
+
+      const title = document.createElement('div');
+      title.className = 'prompt-card-title';
+      title.textContent = prompt.title;
+
+      const text = document.createElement('div');
+      text.className = 'prompt-card-text';
+      text.textContent = prompt.text;
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-btn';
+      copyBtn.type = 'button';
+      copyBtn.textContent = 'Copy';
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(prompt.text).then(() => {
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+        });
+      });
+
+      card.appendChild(title);
+      card.appendChild(text);
+      card.appendChild(copyBtn);
+      return card;
+    }
+
+    function renderCategory(category) {
+      const section = document.createElement('section');
+      section.className = 'prompt-section';
+      section.id = `section-${category.id}`;
+
+      const heading = document.createElement('h2');
+      heading.textContent = `${category.icon} ${category.title}`;
+      section.appendChild(heading);
+
+      const list = document.createElement('div');
+      list.className = 'prompt-list';
+
+      if (category.prompts.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'empty-state';
+        empty.textContent = 'No prompts added yet. Check back soon!';
+        section.appendChild(empty);
+      } else {
+        category.prompts.forEach((prompt) => {
+          list.appendChild(createPromptCard(prompt));
+        });
+        section.appendChild(list);
+      }
+
+      return section;
+    }
+
+    const container = document.getElementById('prompt-sections');
+    promptCategories.forEach((category) => {
+      container.appendChild(renderCategory(category));
+    });
+  </script>
+</body>
+</html>
