@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f6f3">
+  <title>PicNotch - Postcard Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="./index.html" aria-label="PicNotch home"><span class="brand-icon"><i data-lucide="stamp"></i></span>PicNotch<span class="brand-dot">.</span></a>
+    <span class="header-label">THE LITTLE THINGS, COLLECTED.</span>
+    <span class="privacy"><i data-lucide="shield-check"></i> On-device editing</span>
+  </header>
+
+  <main>
+    <div class="page-heading">
+      <div><div class="eyebrow">YOUR CREATIVE DESK</div><h1>Postcard studio<span>.</span></h1></div>
+      <button class="button primary" id="upload-button"><i data-lucide="image-plus"></i> Choose image</button>
+      <input type="file" id="file-input" accept="image/*" hidden>
+    </div>
+
+    <div class="studio">
+      <section class="editor" aria-label="Image editor">
+        <div class="editor-toolbar">
+          <span class="section-label"><i data-lucide="crop"></i> CROP</span>
+          <div class="toolbar-actions">
+            <button class="icon-button" id="rotate-left" title="Rotate left" aria-label="Rotate left" disabled><i data-lucide="rotate-ccw"></i></button>
+            <button class="icon-button" id="rotate-right" title="Rotate right" aria-label="Rotate right" disabled><i data-lucide="rotate-cw"></i></button>
+            <span class="toolbar-divider"></span>
+            <button class="icon-button" id="flip" title="Flip horizontally" aria-label="Flip horizontally" disabled><i data-lucide="flip-horizontal-2"></i></button>
+            <button class="icon-button" id="reset" title="Reset crop" aria-label="Reset crop" disabled><i data-lucide="undo-2"></i></button>
+          </div>
+        </div>
+        <div class="workspace" id="workspace" tabindex="0" aria-label="Image drop area">
+          <div class="empty-state" id="empty-state"><i data-lucide="image"></i><h2>No image selected</h2><button class="button secondary" id="empty-upload"><i data-lucide="plus"></i> Choose image</button></div>
+          <img id="source-image" alt="Image selected for cropping" hidden>
+          <div class="drop-overlay" aria-hidden="true"><i data-lucide="image-plus"></i></div>
+          <span class="canvas-tag" id="canvas-tag" hidden>ORIGINAL</span>
+        </div>
+        <div class="image-info"><div><span class="status-dot"></span><span id="filename">No file selected</span></div><span id="source-size">&mdash;</span></div>
+        <div class="crop-options">
+          <label for="aspect-ratio">Crop ratio</label>
+          <select id="aspect-ratio"><option value="free">Freeform</option><option value="0.7142857142857143" selected>Portrait 5:7</option><option value="1.4">Landscape 7:5</option><option value="1">Square 1:1</option><option value="1.5">Classic 3:2</option></select>
+        </div>
+      </section>
+
+      <aside class="settings" aria-label="Sticker settings">
+        <div class="preview-heading"><span class="section-label">YOUR POSTCARD</span><span class="live-label"><span></span> Live preview</span></div>
+        <div class="preview-stage"><canvas id="preview" width="500" height="650" aria-label="Postcard sticker preview"></canvas></div>
+        <div class="preview-caption"><span id="output-size">&mdash;</span><span>PNG <span class="tiny-dot">/</span> TRANSPARENT</span></div>
+
+        <fieldset id="sticker-controls">
+          <legend>Finishing touches</legend>
+          <div class="control-row"><label for="border-width">Paper border</label><output id="border-value" for="border-width">6%</output></div>
+          <input id="border-width" type="range" min="0" max="16" value="6" step="1">
+          <div class="control-row edge-row"><label for="perforation">Perforation</label><output id="perforation-value" for="perforation">Medium</output></div>
+          <input id="perforation" type="range" min="1" max="3" value="2" step="1">
+          <div class="control-row color-row"><span id="paper-color-label">Paper color</span><div class="swatches" role="group" aria-labelledby="paper-color-label">
+            <button class="swatch selected" style="--swatch:#fffdf7" data-color="#fffdf7" title="Natural white" aria-label="Natural white" aria-pressed="true"></button>
+            <button class="swatch" style="--swatch:#ffffff" data-color="#ffffff" title="Bright white" aria-label="Bright white" aria-pressed="false"></button>
+            <button class="swatch" style="--swatch:#dce8df" data-color="#dce8df" title="Sage" aria-label="Sage" aria-pressed="false"></button>
+            <button class="swatch" style="--swatch:#f4d7cd" data-color="#f4d7cd" title="Blush" aria-label="Blush" aria-pressed="false"></button>
+            <label class="custom-color" title="Custom paper color"><i data-lucide="pipette"></i><input type="color" id="custom-color" value="#fffdf7" aria-label="Custom paper color"></label>
+          </div></div>
+        </fieldset>
+        <button class="button download" id="download" disabled><i data-lucide="download"></i> Save postcard <i data-lucide="arrow-down-right" class="download-arrow"></i></button>
+        <div class="export-note" id="export-note">PNG image</div>
+      </aside>
+    </div>
+    <div class="message" id="message" role="status" aria-live="polite"></div>
+    <section class="ad-section" aria-labelledby="ad-label" data-state="inactive">
+      <div class="ad-label" id="ad-label">Advertisement</div>
+      <ins class="adsbygoogle ad-unit" id="postcard-ad"
+        data-enabled="false"
+        data-ad-client=""
+        data-ad-slot=""
+        data-ad-format="horizontal"
+        data-full-width-responsive="true"></ins>
+    </section>
+    <footer><span>A small frame for a favorite moment.</span><span>MADE TO KEEP <i data-lucide="asterisk"></i></span></footer>
+  </main>
+</body>
+</html>
