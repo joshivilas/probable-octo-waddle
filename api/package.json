@@ -1,0 +1,9 @@
+{
+  "name": "probable-octo-waddle-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Managed Azure Functions API for Azure Static Web Apps",
+  "engines": {
+    "node": "22.x"
+  }
+}
