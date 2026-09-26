@@ -296,35 +296,6 @@
     }
   });
 
-  function initializeAds() {
-    const ad = byId("postcard-ad");
-    if (!ad || ad.dataset.enabled !== "true" || location.protocol !== "https:")
-      return;
-    const client = ad.dataset.adClient;
-    const slot = ad.dataset.adSlot;
-    if (!/^ca-pub-\d{16}$/.test(client) || !/^\d+$/.test(slot)) return;
-
-    const section = ad.closest(".ad-section");
-    const script = document.createElement("script");
-    script.async = true;
-    script.crossOrigin = "anonymous";
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(client)}`;
-    script.addEventListener("load", () => {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        section.dataset.state = "active";
-      } catch {
-        section.dataset.state = "unavailable";
-      }
-    });
-    script.addEventListener("error", () => {
-      section.dataset.state = "unavailable";
-    });
-    section.dataset.state = "loading";
-    document.head.appendChild(script);
-  }
-
-  initializeAds();
   placeholder();
   if (typeof Cropper === "undefined") {
     message(

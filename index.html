@@ -4,132 +4,386 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Probable Octo Waddle - Tools Collection</title>
+  <meta name="description" content="Free browser-based tools for checking color contrast, practicing tempo, creating winner celebrations, improving prompts, and making postcard images.">
+  <title>Probable Octo Waddle - Practical Browser Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    :root {
+      --paper: #f8faf8;
+      --ink: #192c26;
+      --muted: #586b63;
+      --line: #dce4de;
+      --mint: #d8f3df;
+      --green: #245e44;
+      --display: 'Space Grotesk', sans-serif;
     }
-    .header {
-      text-align: center;
-      color: white;
-      margin-bottom: 2rem;
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; line-height: 1.6; letter-spacing: 0; }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button, a, input { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid #26774f; outline-offset: 5px; }
+    [hidden] { display: none !important; }
+    .wrap { width: min(1184px, calc(100% - 64px)); margin-inline: auto; }
+    .skip-link { position: absolute; top: -80px; left: 24px; padding: 12px 20px; background: var(--ink); color: white; z-index: 10; }
+    .skip-link:focus { top: 12px; }
+    .site-header { border-bottom: 1px solid var(--line); background: #fff; }
+    .header-inner { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font: 700 16px/1.3 var(--display); }
+    .brand-mark { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; background: var(--ink); color: #c5f4d3; border-radius: 8px; }
+    .brand-mark svg { width: 26px; height: 26px; }
+    .site-nav { display: flex; align-items: center; gap: 30px; font-size: 13px; font-weight: 600; }
+    .site-nav a { text-decoration: none; padding: 8px 0; }
+    .site-nav a:hover, .footer-links a:hover { color: var(--green); text-decoration: underline; text-underline-offset: 6px; }
+    .site-nav .current { color: var(--green); border-bottom: 2px solid var(--green); }
+    .intro { padding: 46px 0 32px; }
+    .eyebrow { display: flex; align-items: center; gap: 9px; font: 600 11px var(--display); text-transform: uppercase; }
+    .eyebrow::before { content: ''; width: 7px; height: 7px; background: #399663; border-radius: 50%; }
+    h1 { font: 500 46px/1.13 var(--display); margin: 17px 0 14px; }
+    .intro-bottom { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .intro p { margin: 0; color: var(--muted); font-size: 16px; max-width: 620px; }
+    .collection-note { display: flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 12px; color: var(--green); }
+    .collection-note svg { width: 16px; height: 16px; }
+    .directory { padding-bottom: 56px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 4px; }
+    .filter { border: 1px solid transparent; background: transparent; color: var(--muted); padding: 8px 14px; border-radius: 5px; font-size: 13px; font-weight: 600; min-height: 40px; }
+    .filter[aria-pressed="true"] { color: white; background: var(--ink); }
+    .filter:hover:not([aria-pressed="true"]) { background: #e9efea; color: var(--ink); }
+    .search { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--line); border-radius: 5px; padding: 0 12px; width: 244px; flex-shrink: 0; }
+    .search svg { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+    .search:focus-within { outline: 2px solid var(--green); outline-offset: 2px; }
+    .search input { background: none; border: 0; outline: none; min-width: 0; width: 100%; height: 40px; font-size: 13px; color: var(--ink); }
+    .search input::placeholder { color: var(--muted); }
+    .tools-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 22px; }
+    .tool-card { grid-column: span 2; display: flex; flex-direction: column; text-decoration: none; background: white; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; transition: border-color .2s, box-shadow .2s, transform .2s; animation: arrive .45s both; }
+    .tool-card:nth-child(-n+2) { grid-column: span 3; }
+    .tool-card:nth-child(2) { animation-delay: .06s; }
+    .tool-card:nth-child(3) { animation-delay: .12s; }
+    .tool-card:nth-child(4) { animation-delay: .18s; }
+    .tool-card:nth-child(5) { animation-delay: .24s; }
+    .tool-card:hover { border-color: #90ae9e; box-shadow: 0 8px 22px #192c2610; transform: translateY(-3px); }
+    .preview { height: 186px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #192c2608; }
+    .preview-label { position: absolute; top: 15px; left: 18px; font: 500 10px var(--display); text-transform: uppercase; z-index: 1; }
+    .preview-number { position: absolute; bottom: 12px; right: 16px; font: 500 10px var(--display); opacity: .6; }
+    .photo-preview { background: #e5eee9; background-image: radial-gradient(#98b09f55 .7px, transparent .7px); background-size: 12px 12px; }
+    .postcard { background: white; padding: 9px 9px 7px; width: 208px; box-shadow: 3px 8px 14px #192c2620; transform: rotate(-7deg) translateY(11px); transition: transform .3s; }
+    .postcard img { width: 100%; height: 116px; object-fit: cover; display: block; }
+    .postcard-caption { display: flex; align-items: center; justify-content: space-between; padding-top: 5px; font: 500 8px var(--display); color: #40594c; }
+    .postcard-caption svg { height: 11px; width: 11px; }
+    .tool-card:hover .postcard { transform: rotate(-3deg) translateY(7px); }
+    .color-preview { background: linear-gradient(90deg, #254e3d 50%, #dbf3b4 50%); }
+    .color-preview .preview-label { color: #edf7e7; }
+    .color-pair { display: flex; width: 100%; align-items: center; }
+    .color-pair span { width: 50%; text-align: center; font: 500 70px var(--display); }
+    .color-pair span:first-child { color: #dbf3b4; }
+    .color-pair span:last-child { color: #254e3d; }
+    .contrast-label { position: absolute; bottom: 12px; font: 500 10px var(--display); background: white; color: #254e3d; padding: 4px 10px; border-radius: 3px; }
+    .rhythm-preview { background: #edeefc; color: #3e4276; }
+    .tempo { display: flex; align-items: baseline; gap: 8px; margin-top: -22px; }
+    .tempo strong { font: 500 58px/1 var(--display); }
+    .tempo span { font: 500 11px var(--display); }
+    .beats { position: absolute; bottom: 34px; display: flex; gap: 12px; }
+    .beats span { width: 38px; height: 5px; background: #bfc2e0; border-radius: 2px; }
+    .beats span:first-child { background: #555c9f; }
+    .tool-card:hover .beats span { animation: pulse 1.2s infinite; }
+    .tool-card:hover .beats span:nth-child(2) { animation-delay: .3s; }
+    .tool-card:hover .beats span:nth-child(3) { animation-delay: .6s; }
+    .tool-card:hover .beats span:nth-child(4) { animation-delay: .9s; }
+    .celebrate-preview { background: #ffe4d9; color: #a24132; }
+    .trophy { display: grid; place-items: center; width: 92px; height: 92px; border-radius: 50%; border: 1px solid #bf736655; box-shadow: 0 0 0 12px #bf736610, 0 0 0 25px #bf73660a; }
+    .trophy svg { width: 46px; height: 46px; stroke-width: 1.3; }
+    .confetti { position: absolute; width: 7px; height: 13px; background: #be775d; transform: rotate(30deg); left: 21%; top: 38%; }
+    .confetti:nth-of-type(2) { left: 75%; top: 30%; background: #dba642; transform: rotate(-28deg); }
+    .confetti:nth-of-type(3) { left: 80%; top: 72%; background: #529080; transform: rotate(50deg); }
+    .confetti:nth-of-type(4) { left: 16%; top: 74%; background: #dba642; transform: rotate(-35deg); }
+    .prompt-preview { background: #f4efcc; color: #685b23; }
+    .prompt-sample { width: 77%; border-left: 2px solid #b4a354; padding: 0 0 0 16px; font: 400 15px/1.6 var(--display); margin-top: 18px; }
+    .prompt-sample span { padding: 1px 3px; background: #e6daa0; }
+    .card-body { padding: 22px 24px 20px; display: flex; flex-direction: column; flex: 1; }
+    .card-category { color: var(--muted); font: 500 10px var(--display); text-transform: uppercase; margin-bottom: 8px; }
+    .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .card-heading h2 { font: 600 22px/1.3 var(--display); margin: 0; }
+    .open-arrow { display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; width: 32px; height: 32px; flex-shrink: 0; transition: background .2s, color .2s; }
+    .open-arrow svg { width: 16px; height: 16px; }
+    .tool-card:hover .open-arrow { background: var(--ink); color: white; border-color: var(--ink); }
+    .tool-description { margin: 10px 0 18px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .card-meta { display: flex; align-items: center; gap: 7px; font-size: 11px; margin-top: auto; color: var(--green); }
+    .card-meta svg { width: 13px; height: 13px; }
+    .directory-end { margin-top: 20px; display: flex; justify-content: space-between; gap: 16px; font-size: 11px; color: var(--muted); }
+    .empty-state { padding: 54px 20px; text-align: center; border-bottom: 1px solid var(--line); }
+    .empty-state h2 { font: 500 24px var(--display); }
+    .empty-state p { color: var(--muted); }
+    .reset-button { border: 1px solid var(--ink); padding: 9px 18px; border-radius: 5px; color: white; background: var(--ink); }
+    .content-section { border-top: 1px solid var(--line); padding-block: 44px; }
+    .content-section h2 { font: 500 30px/1.25 var(--display); margin: 0 0 16px; }
+    .content-section > p { max-width: 700px; }
+    .content-section h3 { font: 500 17px/1.4 var(--display); margin: 0 0 12px; }
+    .content-section p { color: var(--muted); font-size: 14px; margin-top: 0; }
+    .guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 32px; margin-top: 30px; }
+    .guide-grid article { border-top: 2px solid #bad5c4; padding-top: 18px; }
+    .questions { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; }
+    .question-list details { border-bottom: 1px solid var(--line); }
+    .question-list details:first-child { border-top: 1px solid var(--line); }
+    .question-list summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 19px 0; cursor: pointer; font-size: 14px; font-weight: 600; }
+    .question-list summary::-webkit-details-marker { display: none; }
+    .question-list summary svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .question-list details[open] summary svg { transform: rotate(45deg); }
+    .question-list p { padding-right: 28px; }
+    footer { border-top: 1px solid var(--line); background: #eaf2ec; padding: 28px 0; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+    .footer-title { font: 600 14px var(--display); }
+    footer p { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+    .footer-links { display: flex; gap: 24px; font-size: 12px; }
+    .footer-links a { text-decoration: none; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 24% { background: #555c9f; } 25%, 100% { background: #bfc2e0; } }
+    @media (max-width: 900px) {
+      .tool-card, .tool-card:nth-child(-n+2) { grid-column: span 3; }
+      .guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .collection-note { display: none; }
+      .toolbar { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .search { width: 100%; }
+      .questions { grid-template-columns: 1fr; gap: 12px; }
     }
-    .header h1 {
-      font-size: 2.5rem;
-      margin: 0;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    @media (max-width: 560px) {
+      .wrap { width: calc(100% - 36px); }
+      .header-inner { min-height: 76px; gap: 10px; }
+      .brand { font-size: 12px; gap: 8px; max-width: 170px; }
+      .brand-mark { width: 32px; height: 32px; border-radius: 6px; }
+      .brand-mark svg { width: 22px; height: 22px; }
+      .site-nav { gap: 15px; font-size: 12px; }
+      .site-nav .privacy-nav { display: none; }
+      .intro { padding: 30px 0 24px; }
+      h1 { font-size: 32px; }
+      .intro p { font-size: 14px; }
+      .filters { width: 100%; flex-wrap: nowrap; justify-content: space-between; gap: 0; }
+      .filter { font-size: 12px; padding: 8px 11px; }
+      .tools-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+      .tool-card, .tool-card:nth-child(-n+2) { grid-column: auto; }
+      .card-body { padding: 20px; }
+      .card-heading h2 { font-size: 21px; }
+      .directory-end { flex-direction: column; gap: 4px; }
+      .directory { padding-bottom: 36px; }
+      .content-section { padding-block: 32px; }
+      .content-section h2 { font-size: 26px; }
+      .guide-grid { grid-template-columns: 1fr; gap: 16px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
     }
-    .header p {
-      font-size: 1.2rem;
-      margin: 0.5rem 0;
-      opacity: 0.9;
-    }
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      max-width: 1200px;
-      width: 100%;
-      padding: 0 2rem;
-    }
-    .tool-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .tool-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
-    }
-    .tool-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    .tool-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 0.5rem;
-    }
-    .tool-description {
-      color: #666;
-      line-height: 1.5;
-    }
-    .coming-soon {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-    .coming-soon .tool-title::after {
-      content: " (Coming Soon)";
-      font-size: 0.8rem;
-      color: #999;
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>🎯 Probable Octo Waddle</h1>
-    <p>A collection of fun and useful tools</p>
-  </div>
-
-  <div class="tools-grid">
-    <a href="celebrate/Celebrate-winner.html" class="tool-card">
-      <div class="tool-icon">🏆</div>
-      <div class="tool-title">Winner Declaration</div>
-      <div class="tool-description">
-        Declare winners and create shareable celebration links for your team.
-        Add names and generate a unique URL to share the excitement!
+  <a href="#tools" class="skip-link">Skip to tools</a>
+  <header class="site-header">
+    <div class="header-inner wrap">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><i data-lucide="asterisk"></i></span><span>Probable<br>Octo Waddle</span></a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a class="current" href="#tools" aria-current="page">The collection</a>
+        <a href="about.html">About</a>
+        <a class="privacy-nav" href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="intro" aria-labelledby="page-title">
+      <div class="eyebrow">The everyday collection</div>
+      <h1 id="page-title">Probable Octo Waddle<span style="color: #37815a">.</span></h1>
+      <div class="intro-bottom">
+        <p>A little less busywork. A little more making.<br>Free browser tools for the things you do every day.</p>
+        <span class="collection-note"><i data-lucide="circle-check" aria-hidden="true"></i> No accounts. Just tools.</span>
       </div>
-    </a>
+    </section>
 
-    <a href="color-compare/color-compare.html" class="tool-card">
-      <div class="tool-icon">🎨</div>
-      <div class="tool-title">Color Compare</div>
-      <div class="tool-description">
-        Compare two hex colors side by side with alpha support, WCAG contrast checks, and shareable permalinks.
-        Includes ARGB mode, blend preview, and accessible pass/fail badges.
+    <section class="directory" id="tools" aria-label="Tool collection" tabindex="-1">
+      <div class="toolbar" id="tool-controls" hidden>
+        <div class="filters" role="group" aria-label="Filter tools by category">
+          <button class="filter" type="button" data-filter="all" aria-pressed="true">All tools</button>
+          <button class="filter" type="button" data-filter="design" aria-pressed="false">Design</button>
+          <button class="filter" type="button" data-filter="create" aria-pressed="false">Create</button>
+          <button class="filter" type="button" data-filter="practice" aria-pressed="false">Practice</button>
+        </div>
+        <label class="search"><i data-lucide="search" aria-hidden="true"></i><input type="search" id="tool-search" placeholder="Find a tool..." aria-label="Search tools" autocomplete="off"></label>
       </div>
-    </a>
+      <div class="tools-grid">
+        <a href="PicNotch/index.html" class="tool-card" data-category="design" data-keywords="photo image crop postcard sticker png editor" aria-labelledby="picnotch-title" aria-describedby="picnotch-description">
+          <div class="preview photo-preview" aria-hidden="true">
+            <span class="preview-label">A moment, made to keep</span>
+            <div class="postcard">
+              <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&amp;fit=crop&amp;w=600&amp;q=85" alt="" width="600" height="360" fetchpriority="high">
+              <div class="postcard-caption"><span>A LITTLE PIECE OF EVERYWHERE</span><i data-lucide="asterisk"></i></div>
+            </div>
+            <span class="preview-number">01 / 05</span>
+          </div>
+          <div class="card-body">
+            <span class="card-category">Design / Photography</span>
+            <div class="card-heading"><h2 id="picnotch-title">PicNotch</h2><span class="open-arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p class="tool-description" id="picnotch-description">Turn a favorite photo into a postcard. Crop, frame, and add a finishing touch, all on your device.</p>
+            <span class="card-meta"><i data-lucide="image" aria-hidden="true"></i> Local editing <span aria-hidden="true">&middot;</span> PNG export</span>
+          </div>
+        </a>
+        <a href="color-compare/color-compare.html" class="tool-card" data-category="design" data-keywords="hex argb alpha blend wcag accessibility contrast color colour palette" aria-labelledby="color-title" aria-describedby="color-description">
+          <div class="preview color-preview" aria-hidden="true">
+            <span class="preview-label">A better kind of contrast</span>
+            <div class="color-pair"><span>Aa</span><span>Aa</span></div>
+            <span class="contrast-label">COLOR, WITH CLARITY</span><span class="preview-number">02 / 05</span>
+          </div>
+          <div class="card-body">
+            <span class="card-category">Design / Accessibility</span>
+            <div class="card-heading"><h2 id="color-title">Color Compare</h2><span class="open-arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p class="tool-description" id="color-description">Find colors that work together. Compare hex values, check WCAG contrast, and explore alpha blending.</p>
+            <span class="card-meta"><i data-lucide="contrast" aria-hidden="true"></i> WCAG checks <span aria-hidden="true">&middot;</span> Shareable palettes</span>
+          </div>
+        </a>
+        <a href="metronome/metronome.html" class="tool-card" data-category="practice" data-keywords="music rhythm bpm tempo audio beat metronome" aria-labelledby="metronome-title" aria-describedby="metronome-description">
+          <div class="preview rhythm-preview" aria-hidden="true">
+            <span class="preview-label">Find your rhythm</span>
+            <div class="tempo"><strong>120</strong><span>BPM</span></div>
+            <div class="beats"><span></span><span></span><span></span><span></span></div><span class="preview-number">03 / 05</span>
+          </div>
+          <div class="card-body">
+            <span class="card-category">Practice / Music</span>
+            <div class="card-heading"><h2 id="metronome-title">Metronome</h2><span class="open-arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p class="tool-description" id="metronome-description">Keep a steady pulse, from the first slow practice to the final run-through.</p>
+            <span class="card-meta"><i data-lucide="audio-lines" aria-hidden="true"></i> 30&ndash;240 BPM <span aria-hidden="true">&middot;</span> Visual beats</span>
+          </div>
+        </a>
+        <a href="celebrate/Celebrate-winner.html" class="tool-card" data-category="create" data-keywords="winner declaration celebrate team names announcement confetti" aria-labelledby="winner-title" aria-describedby="winner-description">
+          <div class="preview celebrate-preview" aria-hidden="true">
+            <span class="preview-label">Give good work its moment</span>
+            <span class="trophy"><i data-lucide="trophy"></i></span>
+            <b class="confetti"></b><b class="confetti"></b><b class="confetti"></b><b class="confetti"></b><span class="preview-number">04 / 05</span>
+          </div>
+          <div class="card-body">
+            <span class="card-category">Create / Celebrations</span>
+            <div class="card-heading"><h2 id="winner-title">Winner Declaration</h2><span class="open-arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p class="tool-description" id="winner-description">Make a team win feel special with a personalized, shareable celebration.</p>
+            <span class="card-meta"><i data-lucide="party-popper" aria-hidden="true"></i> 3 celebration styles</span>
+          </div>
+        </a>
+        <a href="prompts/prompts.html" class="tool-card" data-category="create" data-keywords="ai writing text music video email prompts library" aria-labelledby="prompts-title" aria-describedby="prompts-description">
+          <div class="preview prompt-preview" aria-hidden="true">
+            <span class="preview-label">Good ideas start somewhere</span>
+            <div class="prompt-sample">Rewrite the following email to be more <span>concise and professional</span>...</div><span class="preview-number">05 / 05</span>
+          </div>
+          <div class="card-body">
+            <span class="card-category">Create / Writing</span>
+            <div class="card-heading"><h2 id="prompts-title">Prompts Library</h2><span class="open-arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p class="tool-description" id="prompts-description">Skip the blank page. Find a starting point for your next draft, video, or practice session.</p>
+            <span class="card-meta"><i data-lucide="text-cursor-input" aria-hidden="true"></i> Ready-to-copy prompts</span>
+          </div>
+        </a>
+      </div>
+      <div class="empty-state" id="empty-state" hidden>
+        <h2>No matching tools</h2>
+        <p>Nothing in the collection matches this search.</p>
+        <button class="reset-button" id="reset-filters" type="button">Clear filters</button>
+      </div>
+      <div class="directory-end"><span id="result-count" role="status" aria-live="polite" aria-atomic="true">5 tools in the collection</span><span>Small tools. Room for big ideas.</span></div>
+    </section>
 
-    <a href="metronome/metronome.html" class="tool-card">
-      <div class="tool-icon">🎵</div>
-      <div class="tool-title">Metronome</div>
-      <div class="tool-description">
-        A professional metronome for musicians and rhythm practice. Adjustable BPM (30-240), real-time tempo control, 
-        Web Audio API click sounds, and visual beat indicators.
+    <section class="content-section">
+      <h2>Which tool should you use?</h2>
+      <p>Each utility is designed for a small, specific job. There is no account to create and the interactive work happens in your browser. Use the notes below to get a useful result quickly.</p>
+      <div class="guide-grid">
+        <article>
+          <h3>Check readable color combinations</h3>
+          <p>Use Color Compare when selecting text and background colors for a website, slide, chart, or document. Enter two hexadecimal colors and review the WCAG contrast result. Normal body text generally needs a ratio of at least 4.5:1; large text needs at least 3:1. Test important states such as links, buttons, errors, and disabled controls separately.</p>
+        </article>
+        <article>
+          <h3>Practice with a steady pulse</h3>
+          <p>Use the Metronome for scales, chord changes, timing drills, or tempo checks. Begin slowly enough to play cleanly, repeat the passage without tension, then increase the tempo in small steps. Reducing the tempo after a mistake is usually more productive than repeatedly attempting the final speed.</p>
+        </article>
+        <article>
+          <h3>Share a winner announcement</h3>
+          <p>The Winner Declaration tool creates a celebration link from the names you enter. Choose a visual style, generate the link, and send it to the group. Names are encoded in the URL fragment, so the celebration page can read them without sending the list to a site database. Avoid entering confidential or sensitive information in any shareable URL.</p>
+        </article>
+        <article>
+          <h3>Build a better first draft</h3>
+          <p>The Prompts Library contains starting points for writing, music practice, and short videos. Treat each prompt as a template: replace general words with your audience, format, constraints, and desired outcome. A useful prompt gives enough context to evaluate the response instead of asking only for something “better.”</p>
+        </article>
+        <article>
+          <h3>Make a postcard image locally</h3>
+          <p>PicNotch lets you crop a local image, choose a paper treatment, and export a postcard-style PNG. The selected photo is processed by the browser rather than uploaded to this site. Start with the highest-resolution original available and leave important faces or text away from the crop boundary.</p>
+        </article>
       </div>
-    </a>
+    </section>
 
-    <a href="prompts/prompts.html" class="tool-card">
-      <div class="tool-icon">💡</div>
-      <div class="tool-title">Prompts Library</div>
-      <div class="tool-description">
-        A growing collection of daily-use prompts organized by text, music, video, and other categories.
+    <section class="content-section questions" aria-labelledby="questions-title">
+      <h2 id="questions-title">A few good questions.</h2>
+      <div class="question-list">
+        <details>
+          <summary>Do I need an account?<i data-lucide="plus" aria-hidden="true"></i></summary>
+          <p>No. The tools are available without registration or a subscription.</p>
+        </details>
+        <details>
+          <summary>Are uploaded images stored?<i data-lucide="plus" aria-hidden="true"></i></summary>
+          <p>PicNotch processes the image selected from your device locally in the browser. The site does not provide an image-upload API or user gallery.</p>
+        </details>
+        <details>
+          <summary>Are the accessibility results a complete audit?<i data-lucide="plus" aria-hidden="true"></i></summary>
+          <p>No. Contrast is one part of accessibility. A complete review should also cover keyboard navigation, labels, focus visibility, semantic structure, zoom, motion, and testing with assistive technology.</p>
+        </details>
+        <details>
+          <summary>Why several focused tools instead of one large app?<i data-lucide="plus" aria-hidden="true"></i></summary>
+          <p>Small tools load quickly, require less setup, and make it clear what data is involved. Each utility can be opened directly and bookmarked for its particular task.</p>
+        </details>
       </div>
-    </a>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-inner wrap">
+      <div><div class="footer-title">Probable Octo Waddle</div><p>Free, focused browser utilities. Made for the everyday.</p></div>
+      <nav class="footer-links" aria-label="Footer navigation"><a href="#tools">The collection</a><a href="about.html">About</a><a href="privacy.html">Privacy</a></nav>
+    </div>
+  </footer>
+  <script>
+    const toolCards = [...document.querySelectorAll('.tool-card')];
+    const filterButtons = [...document.querySelectorAll('[data-filter]')];
+    const searchInput = document.getElementById('tool-search');
+    const resultCount = document.getElementById('result-count');
+    const emptyState = document.getElementById('empty-state');
+    let activeCategory = 'all';
 
-    <a href="PicNotch/index.html" class="tool-card">
-      <div class="tool-icon">🖼️</div>
-      <div class="tool-title">PicNotch</div>
-      <div class="tool-description">
-        Edit local images and export postcard-style stickers with crop controls and finishing touches.
-      </div>
-    </a>
-  </div>
+    function filterTools() {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+      toolCards.forEach((card) => {
+        const matchesCategory = activeCategory === 'all' || card.dataset.category === activeCategory;
+        const searchText = `${card.querySelector('.card-body').textContent} ${card.dataset.keywords}`.toLowerCase();
+        card.hidden = !(matchesCategory && searchText.includes(query));
+        if (!card.hidden) visibleCount += 1;
+      });
+      filterButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.filter === activeCategory)));
+      resultCount.textContent = `${visibleCount} ${visibleCount === 1 ? 'tool' : 'tools'}${activeCategory === 'all' && !query ? ' in the collection' : ' found'}`;
+      emptyState.hidden = visibleCount !== 0;
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeCategory = button.dataset.filter;
+        filterTools();
+      });
+    });
+    searchInput.addEventListener('input', filterTools);
+    document.getElementById('reset-filters').addEventListener('click', () => {
+      activeCategory = 'all';
+      searchInput.value = '';
+      filterTools();
+      searchInput.focus();
+    });
+    document.getElementById('tool-controls').hidden = false;
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) window.lucide.createIcons();
+    });
+  </script>
 </body>
 </html>

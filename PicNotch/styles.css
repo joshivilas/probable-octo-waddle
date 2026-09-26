@@ -560,33 +560,6 @@ input[type="range"] {
 .message.error {
   color: #a43e32;
 }
-.ad-section {
-  flex-shrink: 0;
-  margin: 12px 0;
-  padding: 12px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  min-width: 0;
-}
-.ad-section[data-state="inactive"] {
-  display: none;
-}
-.ad-label {
-  margin-bottom: 12px;
-  text-align: center;
-  font-size: 10px;
-  color: var(--muted);
-}
-.ad-unit {
-  display: block;
-  width: 100%;
-  min-height: 100px;
-  text-decoration: none;
-}
-.ad-section[data-state="inactive"] .ad-unit,
-.ad-section[data-state="unavailable"] .ad-unit {
-  background: #edf0ea;
-}
 footer {
   padding: 10px 0 0;
   flex-shrink: 0;

@@ -1,280 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse reusable prompts for writing, music practice, and video. Search the collection and copy a starting point for your next project.">
   <title>Prompts Library - Probable Octo Waddle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../info-pages.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script defer src="prompt-data.js"></script>
+  <script defer src="prompts.js"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    [hidden] { display: none !important; }
+    .library-intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+    .library-intro .library-total { font-size: 12px; color: var(--green); white-space: nowrap; }
+    .library-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; padding: 32px 0 56px; }
+    .library-sidebar { align-self: start; position: sticky; top: 24px; min-width: 0; }
+    .sidebar-title { font: 500 11px var(--display); text-transform: uppercase; color: var(--muted); margin: 0 0 16px; }
+    .category-list { display: grid; gap: 6px; }
+    .category-button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 11px 12px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--muted); text-align: left; font-size: 13px; }
+    .category-button:hover { background: #eaf2ec; color: var(--ink); }
+    .category-button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+    .category-button svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .category-name { overflow-wrap: anywhere; }
+    .category-count { margin-left: auto; font: 500 11px var(--display); padding-left: 8px; }
+    .library-content { min-width: 0; }
+    .library-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .search-field { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: white; border: 1px solid var(--line); border-radius: 5px; padding: 0 12px; }
+    .search-field:focus-within { outline: 2px solid var(--green); outline-offset: 2px; }
+    .search-field svg { width: 17px; height: 17px; flex-shrink: 0; color: var(--muted); }
+    .search-field input { min-width: 0; width: 100%; height: 44px; border: 0; outline: none; background: transparent; color: var(--ink); font-size: 13px; }
+    .search-field input::placeholder { color: var(--muted); }
+    .sort-field { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+    .sort-field select { min-height: 44px; max-width: 155px; border: 1px solid var(--line); border-radius: 5px; padding: 0 10px; background: white; color: var(--ink); font-size: 12px; }
+    .results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0 0 16px; }
+    .results-heading h2 { font: 500 23px/1.3 var(--display); margin: 0; overflow-wrap: anywhere; }
+    .result-count { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    .prompt-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+    .prompt-card { --accent: #245e44; --tint: #d8f3df; background: white; border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 8px; padding: 22px; min-width: 0; display: flex; flex-direction: column; transition: border-color .2s, box-shadow .2s; }
+    .prompt-card[data-tone="coral"] { --accent: #a24132; --tint: #ffe4d9; }
+    .prompt-card[data-tone="lilac"] { --accent: #3e4276; --tint: #edeefc; }
+    .prompt-card[data-tone="yellow"] { --accent: #685b23; --tint: #f4efcc; }
+    .prompt-card:hover { box-shadow: 0 6px 18px #192c2609; border-color: var(--accent); }
+    .prompt-topline { display: flex; align-items: center; gap: 9px; color: var(--accent); margin-bottom: 18px; }
+    .prompt-icon { width: 30px; height: 30px; border-radius: 5px; background: var(--tint); display: grid; place-items: center; flex-shrink: 0; }
+    .prompt-icon svg { width: 16px; height: 16px; }
+    .prompt-category { font: 500 10px/1.5 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
+    .prompt-title { font: 500 19px/1.35 var(--display); margin: 0 0 14px; overflow-wrap: anywhere; }
+    .prompt-text { margin: 0 0 20px; font-size: 14px; line-height: 1.8; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .prompt-tags { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: auto 0 0; padding: 0 0 18px; list-style: none; font-size: 11px; color: var(--muted); }
+    .prompt-tags li { overflow-wrap: anywhere; }
+    .prompt-tags li::before { content: '#'; color: var(--accent); }
+    .result-link { display: inline-flex; align-items: center; align-self: flex-start; gap: 8px; min-height: 44px; margin-bottom: 12px; color: var(--accent); font-size: 13px; text-decoration: none; }
+    .result-link:hover { text-decoration: underline; }
+    .result-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .prompt-actions { border-top: 1px solid var(--line); padding-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .copy-state { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+    .copy-button { position: relative; display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border: 1px solid var(--line); border-radius: 5px; background: white; color: var(--ink); }
+    .copy-button:hover { background: var(--ink); color: white; border-color: var(--ink); }
+    .copy-button:disabled { opacity: .5; cursor: wait; }
+    .copy-button svg { width: 17px; height: 17px; }
+    .copy-button::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 8px); right: 0; background: var(--ink); color: white; font-size: 11px; white-space: nowrap; border-radius: 4px; padding: 5px 9px; pointer-events: none; opacity: 0; }
+    .copy-button:hover::after, .copy-button:focus-visible::after { opacity: 1; }
+    .empty-state { padding: 48px 20px; border-block: 1px solid var(--line); text-align: center; }
+    .empty-state > svg { width: 32px; height: 32px; color: var(--muted); }
+    .empty-state h3 { font: 500 22px var(--display); }
+    .empty-state p { color: var(--muted); font-size: 14px; }
+    .reset-button { border: 0; border-radius: 5px; padding: 11px 18px; background: var(--ink); color: white; font-size: 13px; }
+    .library-note { border-top: 1px solid var(--line); margin: 24px 0 0; padding-top: 16px; color: var(--muted); font-size: 12px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    @media (max-width: 1000px) {
+      .library-layout { grid-template-columns: 180px minmax(0, 1fr); gap: 24px; }
+      .prompt-list { grid-template-columns: minmax(0, 1fr); }
     }
-    .header {
-      text-align: center;
-      color: white;
-      margin: 3rem 1rem 2rem;
+    @media (max-width: 640px) {
+      .library-intro { align-items: flex-start; flex-direction: column; gap: 16px; }
+      .library-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-top: 24px; }
+      .library-sidebar { position: static; }
+      .category-list { display: flex; flex-wrap: wrap; gap: 6px; }
+      .category-button { width: auto; max-width: 100%; border-color: var(--line); padding: 8px 10px; font-size: 12px; }
+      .category-count { padding-left: 0; }
+      .library-sidebar .back-link { display: none; }
+      .library-toolbar { flex-wrap: wrap; }
+      .search-field { flex-basis: 100%; }
+      .sort-field { margin-left: auto; }
+      .prompt-card { padding: 20px; }
+      .results-heading h2 { font-size: 21px; }
     }
-    .header h1 {
-      font-size: 2.5rem;
-      margin: 0;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    .header p {
-      font-size: 1.2rem;
-      margin: 0.5rem 0;
-      opacity: 0.9;
-    }
-    .back-link {
-      color: white;
-      text-decoration: none;
-      font-size: 1rem;
-      opacity: 0.9;
-      display: inline-block;
-      margin-bottom: 1rem;
-    }
-    .back-link:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-    .container {
-      max-width: 1200px;
-      width: 100%;
-      padding: 0 2rem 3rem;
-      box-sizing: border-box;
-    }
-    .ad-slot {
-      background: rgba(255, 255, 255, 0.15);
-      border: 2px dashed rgba(255, 255, 255, 0.5);
-      border-radius: 12px;
-      color: white;
-      text-align: center;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      font-size: 0.9rem;
-      opacity: 0.85;
-    }
-    .prompt-section {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-    .prompt-section summary {
-      margin-top: 0;
-      color: #333;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      list-style: none;
-    }
-    .prompt-section summary::-webkit-details-marker {
-      display: none;
-    }
-    .prompt-section summary::before {
-      content: '▶';
-      font-size: 1rem;
-      color: #667eea;
-      transition: transform 0.2s ease;
-    }
-    .prompt-section[open] summary::before {
-      transform: rotate(90deg);
-    }
-    .prompt-section .prompt-list {
-      margin-top: 1rem;
-    }
-    .prompt-section .empty-state {
-      margin-top: 1rem;
-    }
-    .prompt-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-    }
-    .prompt-card {
-      background: #f7f7fb;
-      border: 1px solid #e0e0ef;
-      border-radius: 8px;
-      padding: 1rem;
-      position: relative;
-    }
-    .prompt-card-title {
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 0.4rem;
-    }
-    .prompt-card-text {
-      color: #555;
-      line-height: 1.4;
-      font-size: 0.95rem;
-      white-space: pre-wrap;
-    }
-    .copy-btn {
-      margin-top: 0.75rem;
-      background: #667eea;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 0.4rem 0.8rem;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-    .copy-btn:hover {
-      background: #5a67d8;
-    }
-    .empty-state {
-      color: #888;
-      font-style: italic;
+    @media (prefers-reduced-motion: reduce) {
+      .prompt-card { transition: none; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <a href="../index.html" class="back-link">&larr; Back to Tools</a>
-    <h1>💡 Prompts Library</h1>
-    <p>Daily prompts for text, music, video and more</p>
-  </div>
-
-  <div class="container">
-    <!-- Ad Slot: Google AdSense placeholder -->
-    <div class="ad-slot" id="ad-google">
-      <!-- TODO: Add Google AdSense code here -->
-      Ad space (Google AdSense) - to be configured
+  <a href="#content" class="skip-link">Skip to prompts</a>
+  <header class="site-header">
+    <div class="header-inner wrap">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"><i data-lucide="asterisk"></i></span><span>Probable<br>Octo Waddle</span></a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html#tools">The collection</a><a href="../about.html">About</a><a href="../privacy.html">Privacy</a>
+      </nav>
     </div>
-
-    <div id="prompt-sections"></div>
-
-    <!-- Ad Slot: Microsoft Ads placeholder -->
-    <div class="ad-slot" id="ad-microsoft">
-      <!-- TODO: Add Microsoft Ads code here -->
-      Ad space (Microsoft Ads) - to be configured
+  </header>
+  <main class="wrap" id="content" tabindex="-1">
+    <section class="intro library-intro" aria-labelledby="page-title">
+      <div><div class="eyebrow">The everyday collection / Create</div><h1 id="page-title">Prompts Library<span class="title-dot">.</span></h1><p>A starting point for your next good idea.</p></div>
+      <p class="library-total" id="library-total"></p>
+    </section>
+    <div class="library-layout" id="library" hidden>
+      <aside class="library-sidebar" aria-labelledby="categories-title">
+        <h2 class="sidebar-title" id="categories-title">Categories</h2>
+        <div class="category-list" id="category-filters" role="group" aria-label="Filter prompts by category"></div>
+        <a class="back-link" href="../index.html#tools"><i data-lucide="arrow-left" aria-hidden="true"></i> Back to the collection</a>
+      </aside>
+      <section class="library-content" aria-labelledby="results-title">
+        <div class="library-toolbar">
+          <label class="search-field"><i data-lucide="search" aria-hidden="true"></i><input type="search" id="prompt-search" placeholder="Search prompts, topics, or tags..." aria-label="Search prompts" autocomplete="off"></label>
+          <label class="sort-field">Sort by<select id="prompt-sort"><option value="collection">Collection order</option><option value="title">Title A&ndash;Z</option></select></label>
+        </div>
+        <div class="results-heading"><h2 id="results-title">All prompts</h2><span class="result-count" id="result-count" role="status" aria-live="polite" aria-atomic="true"></span></div>
+        <div class="prompt-list" id="prompt-list"></div>
+        <div class="empty-state" id="empty-state" hidden>
+          <i data-lucide="search-x" aria-hidden="true"></i><h3 id="empty-title">No matching prompts</h3><p id="empty-description">Nothing in this selection matches your search.</p><button class="reset-button" id="reset-filters" type="button">Show all prompts</button>
+        </div>
+        <p class="library-note">Prompt responses can vary. Review generated content for accuracy and keep sensitive information out of third-party AI services.</p>
+      </section>
     </div>
-  </div>
-
-  <script>
-    // Centralized prompt data. Add new categories or prompts here as they grow.
-    // Each category renders its own section automatically, so this file stays
-    // maintainable as the prompt library scales.
-    const promptCategories = [
-      {
-        id: 'text',
-        icon: '📝',
-        title: 'Text Prompts',
-        prompts: [
-          {
-            title: 'Daily Journal Reflection',
-            text: 'Summarize the three most important things that happened today and what I learned from each.'
-          },
-          {
-            title: 'Email Polish',
-            text: 'Rewrite the following email to be more concise and professional while keeping the original intent.'
-          }
-        ]
-      },
-      {
-        id: 'music',
-        icon: '🎵',
-        title: 'Music Prompts',
-        prompts: [
-          {
-            title: 'Practice Warmup',
-            text: 'Generate a 10-minute warmup routine for practicing scales and arpeggios on guitar.'
-          }
-        ]
-      },
-      {
-        id: 'video',
-        icon: '🎬',
-        title: 'Video Prompts',
-        prompts: [
-          {
-            title: 'Short-Form Hook',
-            text: 'Write three attention-grabbing opening lines for a 30-second video about productivity tips.'
-          }
-        ]
-      },
-      {
-        id: 'other',
-        icon: '✨',
-        title: 'Other Prompts',
-        prompts: []
-      }
-    ];
-
-    function createPromptCard(prompt) {
-      const card = document.createElement('div');
-      card.className = 'prompt-card';
-
-      const title = document.createElement('div');
-      title.className = 'prompt-card-title';
-      title.textContent = prompt.title;
-
-      const text = document.createElement('div');
-      text.className = 'prompt-card-text';
-      text.textContent = prompt.text;
-
-      const copyBtn = document.createElement('button');
-      copyBtn.className = 'copy-btn';
-      copyBtn.type = 'button';
-      copyBtn.textContent = 'Copy';
-      copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(prompt.text).then(() => {
-          copyBtn.textContent = 'Copied!';
-          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
-        }).catch(() => {
-          copyBtn.textContent = 'Copy failed';
-          setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
-        });
-      });
-
-      card.appendChild(title);
-      card.appendChild(text);
-      card.appendChild(copyBtn);
-      return card;
-    }
-
-    function renderCategory(category) {
-      const section = document.createElement('details');
-      section.className = 'prompt-section';
-      section.id = `section-${category.id}`;
-      section.open = true;
-
-      const summary = document.createElement('summary');
-      summary.textContent = `${category.icon} ${category.title}`;
-      section.appendChild(summary);
-
-      const list = document.createElement('div');
-      list.className = 'prompt-list';
-
-      if (category.prompts.length === 0) {
-        const empty = document.createElement('p');
-        empty.className = 'empty-state';
-        empty.textContent = 'No prompts added yet. Check back soon!';
-        section.appendChild(empty);
-      } else {
-        category.prompts.forEach((prompt) => {
-          list.appendChild(createPromptCard(prompt));
-        });
-        section.appendChild(list);
-      }
-
-      return section;
-    }
-
-    const container = document.getElementById('prompt-sections');
-    promptCategories.forEach((category) => {
-      container.appendChild(renderCategory(category));
-    });
-  </script>
+    <noscript><p>JavaScript is required to browse and copy prompts. <a href="prompt-data.js">View the prompt collection as plain text</a>.</p></noscript>
+    <p id="load-status" role="status">Loading the collection...</p>
+    <p class="sr-only" id="copy-status" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+  <footer>
+    <div class="footer-inner wrap">
+      <div><div class="footer-title">Probable Octo Waddle</div><p>Free, focused browser utilities. Made for the everyday.</p></div>
+      <nav class="footer-links" aria-label="Footer navigation"><a href="../index.html#tools">The collection</a><a href="../about.html">About</a><a href="../privacy.html">Privacy</a></nav>
+    </div>
+  </footer>
 </body>
 </html>

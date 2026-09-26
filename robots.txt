@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jolly-wave-0f389ea00.2.azurestaticapps.net/sitemap.xml
