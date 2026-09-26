@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Browse reusable prompts for writing, music practice, and video. Search the collection and copy a starting point for your next project.">
+  <meta name="description" content="Five practical prompt guides for reflection, email editing, guitar practice, video hooks, and product images, with input examples, illustrative results, and review checks.">
   <title>Prompts Library - Probable Octo Waddle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,7 +41,7 @@
     .results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0 0 16px; }
     .results-heading h2 { font: 500 23px/1.3 var(--display); margin: 0; overflow-wrap: anywhere; }
     .result-count { font-size: 12px; color: var(--muted); flex-shrink: 0; }
-    .prompt-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+    .prompt-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
     .prompt-card { --accent: #245e44; --tint: #d8f3df; background: white; border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 8px; padding: 22px; min-width: 0; display: flex; flex-direction: column; transition: border-color .2s, box-shadow .2s; }
     .prompt-card[data-tone="coral"] { --accent: #a24132; --tint: #ffe4d9; }
     .prompt-card[data-tone="lilac"] { --accent: #3e4276; --tint: #edeefc; }
@@ -52,12 +53,18 @@
     .prompt-category { font: 500 10px/1.5 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
     .prompt-title { font: 500 19px/1.35 var(--display); margin: 0 0 14px; overflow-wrap: anywhere; }
     .prompt-text { margin: 0 0 20px; font-size: 14px; line-height: 1.8; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
-    .prompt-tags { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: auto 0 0; padding: 0 0 18px; list-style: none; font-size: 11px; color: var(--muted); }
+    .prompt-guidance { margin-bottom: 18px; }
+    .prompt-guidance h4, .template-heading { font: 600 14px/1.5 var(--display); margin: 0 0 8px; }
+    .prompt-guidance p, .prompt-checks { margin: 0; font-size: 14px; line-height: 1.8; color: var(--muted); overflow-wrap: anywhere; }
+    .prompt-guidance p { white-space: pre-wrap; }
+    .prompt-checks { padding-left: 22px; }
+    .prompt-checks li + li { margin-top: 8px; }
+    .prompt-example { border-top: 1px solid var(--line); margin: 18px 0; }
+    .prompt-example summary { cursor: pointer; padding: 14px 0; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+    .prompt-example summary:focus-visible, .copy-button:focus-visible, .category-button:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+    .prompt-tags { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 0; padding: 0; list-style: none; font-size: 11px; color: var(--muted); }
     .prompt-tags li { overflow-wrap: anywhere; }
     .prompt-tags li::before { content: '#'; color: var(--accent); }
-    .result-link { display: inline-flex; align-items: center; align-self: flex-start; gap: 8px; min-height: 44px; margin-bottom: 12px; color: var(--accent); font-size: 13px; text-decoration: none; }
-    .result-link:hover { text-decoration: underline; }
-    .result-link svg { width: 16px; height: 16px; flex-shrink: 0; }
     .prompt-actions { border-top: 1px solid var(--line); padding-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .copy-state { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
     .copy-button { position: relative; display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border: 1px solid var(--line); border-radius: 5px; background: white; color: var(--ink); }
@@ -108,7 +115,7 @@
   </header>
   <main class="wrap" id="content" tabindex="-1">
     <section class="intro library-intro" aria-labelledby="page-title">
-      <div><div class="eyebrow">The everyday collection / Create</div><h1 id="page-title">Prompts Library<span class="title-dot">.</span></h1><p>A starting point for your next good idea.</p></div>
+      <div><div class="eyebrow">The everyday collection / Create</div><h1 id="page-title">Prompts Library<span class="title-dot">.</span></h1><p>Five focused guides for turning a vague request into a useful draft, practice plan, or visual concept.</p><p>Choose a task, replace the bracketed inputs, then copy the template into your preferred AI tool. Open each example and review guide for a concrete input, an illustrative result, and checks to apply before using a response. Examples are written illustrations, not tested AI outputs.</p></div>
       <p class="library-total" id="library-total"></p>
     </section>
     <div class="library-layout" id="library" hidden>
@@ -119,7 +126,7 @@
       </aside>
       <section class="library-content" aria-labelledby="results-title">
         <div class="library-toolbar">
-          <label class="search-field"><i data-lucide="search" aria-hidden="true"></i><input type="search" id="prompt-search" placeholder="Search prompts, topics, or tags..." aria-label="Search prompts" autocomplete="off"></label>
+          <label class="search-field"><i data-lucide="search" aria-hidden="true"></i><input type="search" id="prompt-search" placeholder="Search templates, examples, or topics..." aria-label="Search prompts and guidance" autocomplete="off"></label>
           <label class="sort-field">Sort by<select id="prompt-sort"><option value="collection">Collection order</option><option value="title">Title A&ndash;Z</option></select></label>
         </div>
         <div class="results-heading"><h2 id="results-title">All prompts</h2><span class="result-count" id="result-count" role="status" aria-live="polite" aria-atomic="true"></span></div>

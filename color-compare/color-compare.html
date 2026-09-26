@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Compare color swatches side by side and inspect their HEX, RGB, and ARGB values in your browser.">
+    <meta name="description" content="Compare HEX and ARGB colors, calculate WCAG text contrast, and preview transparent text over a background with practical accessibility guidance.">
     <title>Color Compare - Probable Octo Waddle</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../info-pages.css">
+    <script src="contrast.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
     <style>
         button, input { font: inherit; }
@@ -59,6 +61,18 @@
         .comparison-item { padding: 12px 0; border-bottom: 1px solid var(--line); min-width: 0; }
         .comparison-label { font-size: 10px; color: var(--muted); margin-bottom: 5px; }
         .comparison-value { font: 500 13px/1.6 var(--display); color: var(--ink); overflow-wrap: anywhere; }
+        [hidden] { display: none !important; }
+        .contrast-panel { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 24px; }
+        .contrast-panel h2 { font: 500 23px/1.3 var(--display); }
+        .contrast-controls { display: flex; flex-wrap: wrap; gap: 16px; }
+        .contrast-controls label { display: grid; gap: 6px; font-size: 13px; }
+        .contrast-controls select { font: inherit; padding: 8px; max-width: 100%; background: white; color: var(--ink); border: 1px solid var(--line); border-radius: 5px; }
+        #contrast-message { color: var(--muted); }
+        #contrast-sample { padding: 24px; border: 1px solid var(--line); border-radius: 6px; }
+        #contrast-results { padding-left: 22px; }
+        .tool-guide { max-width: 800px; padding: 0 0 48px; }
+        .tool-guide h2, .tool-guide h3 { font-family: var(--display); font-weight: 500; }
+        .tool-guide p, .tool-guide li { color: var(--muted); }
         .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
         @media (max-width: 1000px) {
             .content { grid-template-columns: 220px minmax(0, 1fr); gap: 24px; }
@@ -201,10 +215,42 @@
                             <div class="comparison-value" id="comp-rgb3">80, 250, 123</div>
                         </div>
                     </div>
+                    <section class="contrast-panel" aria-labelledby="contrast-title">
+                        <h2 id="contrast-title">WCAG text contrast</h2>
+                        <div class="contrast-controls">
+                            <label>Text color<select id="contrast-text"><option value="1">Color 1</option><option value="2">Color 2</option><option value="3">Color 3</option></select></label>
+                            <label>Background color<select id="contrast-background"><option value="1">Color 1</option><option value="2" selected>Color 2</option><option value="3">Color 3</option></select></label>
+                        </div>
+                        <p>Transparent backgrounds are placed on white. Transparent text is then placed on that background. Choose opaque colors if the final surface is not white.</p>
+                        <div role="status" aria-live="polite" aria-atomic="true">
+                            <p id="contrast-message"></p>
+                            <ul id="contrast-results" hidden></ul>
+                        </div>
+                        <p id="contrast-sample" hidden>The quick brown fox jumps over the lazy dog. 0123456789</p>
+                        <noscript><p>Enable JavaScript to calculate contrast and update the color previews. The guide below remains available without it.</p></noscript>
+                    </section>
                 </div>
             </div>
             </section>
         </div>
+        <section class="tool-guide" aria-labelledby="guide-title">
+            <h2 id="guide-title">Choose readable text and background colors</h2>
+            <ol>
+                <li>Enter colors with a leading # and six digits, such as #1A1A1A. Use Add color to compare more candidates.</li>
+                <li>Select which palette color represents text and which represents its background. The contrast result updates as you edit either value.</li>
+                <li>Use ARGB mode for eight-digit #AARRGGBB values. The first two digits control opacity: 00 is transparent, 80 is about half opaque, and FF is opaque. This differs from CSS's eight-digit #RRGGBBAA notation.</li>
+                <li>Check the result for the actual text size, then test the design in context. Switching back to HEX removes the alpha component.</li>
+            </ol>
+            <h3>A worked example: gray body text</h3>
+            <p>Set text to #777777 and the background to #FFFFFF. The ratio is about 4.48:1: it passes AA for large text but fails AA for normal text. Darken the text to #767676 and the ratio becomes about 4.54:1, passing AA for normal text. A small visual difference can cross a threshold; the pass/fail labels use the full calculation, not the rounded number.</p>
+            <h3>What the results mean</h3>
+            <p>WCAG AA requires at least 4.5:1 for normal text and 3:1 for large text. AAA requires 7:1 and 4.5:1 respectively. Large text means at least 18 pt (24 CSS px), or 14 pt (about 18.67 CSS px) when bold. The sample above demonstrates colors, not whether your own font qualifies as large.</p>
+            <p>The calculator converts sRGB channels to relative luminance and divides the lighter luminance plus 0.05 by the darker luminance plus 0.05. Ratios range from 1:1 to 21:1. See the <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">WCAG contrast guidance</a> for exceptions and the full definition.</p>
+            <h3>Transparency, limitations, and privacy</h3>
+            <p>For transparency, layer order matters. Half-transparent black text on white looks gray; checking black alone would overstate its contrast. This tool composites onto a white page before calculating. Gradients, photographs, filters, and other underlying surfaces require testing the actual rendered colors at the weakest-contrast location.</p>
+            <p>An invalid or empty selected color clears the contrast result rather than leaving an old pass visible. The standalone swatches show valid colors over white; the text sample shows the selected pair layered together. Color checks run locally, and reloading resets the palette. This tool does not currently save or share palettes.</p>
+            <p>A passing ratio is not a complete accessibility audit. Check keyboard use, labels, focus, zoom, and whether information relies on color alone. Test relevant interactive states; inactive controls have different WCAG exceptions.</p>
+        </section>
     </main>
     <footer>
         <div class="footer-inner wrap">
@@ -217,6 +263,39 @@
         const colorInputs = ['color1', 'color2', 'color3'];
         const colorCount = { current: 3 };
         let isARGBMode = false;
+
+        function updateContrast() {
+            const message = document.getElementById('contrast-message');
+            const results = document.getElementById('contrast-results');
+            const sample = document.getElementById('contrast-sample');
+            const text = document.getElementById(`color${document.getElementById('contrast-text').value}`).value.trim();
+            const background = document.getElementById(`color${document.getElementById('contrast-background').value}`).value.trim();
+            results.hidden = true;
+            sample.hidden = true;
+            results.replaceChildren();
+            if (!isValidHex(text) || !isValidHex(background)) {
+                message.textContent = 'Enter valid colors for both selected palette entries to calculate contrast.';
+                return;
+            }
+            const result = ColorContrast.compare(text, background);
+            message.textContent = `Contrast ratio: ${result.ratio.toFixed(2)}:1`;
+            const checks = [
+                ['AA normal text (4.5:1)', result.aaNormal],
+                ['AA large text (3:1)', result.aaLarge],
+                ['AAA normal text (7:1)', result.aaaNormal],
+                ['AAA large text (4.5:1)', result.aaaLarge]
+            ];
+            checks.forEach(([label, passes]) => {
+                const item = document.createElement('li');
+                item.textContent = `${label}: ${passes ? 'Pass' : 'Fail'}`;
+                results.appendChild(item);
+            });
+            const cssColor = color => `rgb(${color.r}, ${color.g}, ${color.b})`;
+            sample.style.color = cssColor(result.text);
+            sample.style.backgroundColor = cssColor(result.background);
+            results.hidden = false;
+            sample.hidden = false;
+        }
 
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -266,14 +345,31 @@
             return '#' + cleanHex;
         }
 
+        function openColorPicker(colorNum) {
+            const input = document.getElementById(`color${colorNum}`);
+            const current = input.value.trim();
+            const valid = isValidHex(current);
+            const alpha = isARGBMode && valid && current.length === 9 ? current.slice(1, 3) : '';
+            const picker = document.createElement('input');
+            picker.type = 'color';
+            picker.value = valid ? extractRgbFromInput(current) : '#FFFFFF';
+            picker.addEventListener('change', () => {
+                input.value = alpha ? `#${alpha}${picker.value.slice(1)}` : picker.value;
+                updateColor(colorNum);
+            });
+            picker.click();
+        }
+
         function updateColor(colorNum) {
             const input = document.getElementById(`color${colorNum}`);
             let hex = input.value.trim();
             const errorDiv = document.getElementById(`error${colorNum}`);
+            updateContrast();
 
             if (!hex) {
-                errorDiv.style.display = 'none';
-                input.removeAttribute('aria-invalid');
+                errorDiv.textContent = 'Enter a color value.';
+                errorDiv.style.display = 'block';
+                input.setAttribute('aria-invalid', 'true');
                 return;
             }
 
@@ -295,7 +391,9 @@
             const rgb = hexToRgb(rgbHex);
             const normalizedHex = rgbHex.toUpperCase();
 
-            document.getElementById(`display${colorNum}`).style.backgroundColor = normalizedHex;
+            const parsed = ColorContrast.parse(hex);
+            const rendered = ColorContrast.composite(parsed, ColorContrast.parse('#FFFFFF'));
+            document.getElementById(`display${colorNum}`).style.backgroundColor = `rgb(${rendered.r}, ${rendered.g}, ${rendered.b})`;
             document.getElementById(`hex${colorNum}`).textContent = normalizedHex;
             document.getElementById(`rgb${colorNum}`).textContent = `RGB(${rgb.r}, ${rgb.g}, ${rgb.b})`;
 
@@ -372,18 +470,15 @@
 
             const input = document.getElementById(`color${colorNum}`);
             const picker = document.getElementById(`picker${colorNum}`);
+            ['contrast-text', 'contrast-background'].forEach(id => {
+                const option = document.createElement('option');
+                option.value = String(colorNum);
+                option.textContent = `Color ${colorNum}`;
+                document.getElementById(id).appendChild(option);
+            });
 
             input.addEventListener('input', () => updateColor(colorNum));
-            picker.addEventListener('click', () => {
-                const tempInput = document.createElement('input');
-                tempInput.type = 'color';
-                tempInput.value = input.value || '#FFFFFF';
-                tempInput.addEventListener('change', () => {
-                    input.value = tempInput.value;
-                    updateColor(colorNum);
-                });
-                tempInput.click();
-            });
+            picker.addEventListener('click', () => openColorPicker(colorNum));
 
             updateColor(colorNum);
             document.getElementById('palette-count').textContent = `${colorCount.current} colors`;
@@ -408,20 +503,13 @@
 
             input.addEventListener('input', () => updateColor(colorNum));
             
-            picker.addEventListener('click', () => {
-                const tempInput = document.createElement('input');
-                tempInput.type = 'color';
-                tempInput.value = input.value || '#FFFFFF';
-                tempInput.addEventListener('change', () => {
-                    input.value = tempInput.value;
-                    updateColor(colorNum);
-                });
-                tempInput.click();
-            });
+            picker.addEventListener('click', () => openColorPicker(colorNum));
         });
 
         document.getElementById('addColorBtn').addEventListener('click', addColor);
         document.getElementById('clearBtn').addEventListener('click', clearAll);
+        document.getElementById('contrast-text').addEventListener('change', updateContrast);
+        document.getElementById('contrast-background').addEventListener('change', updateContrast);
 
         document.querySelectorAll('input[name="color-format"]').forEach(toggle => toggle.addEventListener('change', function() {
             isARGBMode = document.getElementById('argbToggle').checked;
@@ -429,7 +517,10 @@
             // Update all color displays
             for (let i = 1; i <= colorCount.current; i++) {
                 const input = document.getElementById(`color${i}`);
-                if (input && input.value) {
+                if (input) {
+                    if (!isARGBMode && /^#[0-9A-F]{8}$/i.test(input.value.trim())) {
+                        input.value = extractRgbFromInput(input.value.trim());
+                    }
                     updateColor(i);
                 }
             }

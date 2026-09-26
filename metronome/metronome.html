@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A free browser metronome with adjustable tempo from 30 to 240 BPM, audio clicks, and a visual beat indicator.">
     <title>Metronome - Probable Octo Waddle</title>
@@ -113,6 +114,18 @@
             .control-section { margin-bottom: 8px; }
             footer { padding: 6px 0; }
         }
+        body { height: auto; min-height: 100vh; min-height: 100dvh; grid-template-rows: auto 1fr auto; }
+        .practice-layout { flex: none; min-height: 300px; }
+        .practice-guide { border-top: 1px solid var(--line); padding: 28px 0 40px; line-height: 1.65; }
+        .practice-guide h2 { font: 500 24px/1.3 var(--display); margin: 0 0 20px; }
+        .practice-guide h3 { font: 500 18px/1.4 var(--display); margin: 0 0 10px; }
+        .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 36px; }
+        .practice-guide p { margin: 0 0 12px; }
+        .practice-guide ol { margin: 0; padding-left: 24px; }
+        .practice-guide li + li { margin-top: 8px; }
+        @media (max-width: 700px) {
+            .guide-grid { grid-template-columns: minmax(0, 1fr); }
+        }
     </style>
 </head>
 <body>
@@ -155,6 +168,34 @@
                 <p class="settings-note"><i data-lucide="volume-2" aria-hidden="true"></i> Audio clicks &amp; visual pulse</p>
             </section>
         </div>
+        <section class="practice-guide" aria-labelledby="practice-guide-title">
+            <h2 id="practice-guide-title">Practice with a steady reference</h2>
+            <div class="guide-grid">
+                <section aria-labelledby="practice-steps">
+                    <h3 id="practice-steps">Set up a session</h3>
+                    <ol>
+                        <li>Choose a whole-number tempo from 30 to 240 BPM using the slider, number field, or one-BPM minus/plus buttons. After typing, leave the field to apply the value.</li>
+                        <li>Turn your device volume down before pressing <strong>Start</strong>, then raise it to a comfortable level. The dot flashes with each click.</li>
+                        <li>Change the tempo while playing if needed. <strong>Stop</strong> keeps your tempo; <strong>Reset</strong> stops playback and returns to 120 BPM.</li>
+                    </ol>
+                </section>
+                <section aria-labelledby="practice-example">
+                    <h3 id="practice-example">Example: build a four-beat phrase</h3>
+                    <p>Set 60 BPM: there is one second between beats. Count “1, 2, 3, 4” with four clicks and play one note per click. Repeat the phrase four times without rushing, then try 64 BPM. If the phrase becomes uneven, return to 60 and repeat.</p>
+                    <p>For eighth-note practice, keep the same tempo and count “1 and 2 and 3 and 4 and,” placing each “and” between clicks. The tool does not generate these subdivisions or accent the first beat; you supply the count.</p>
+                </section>
+                <section aria-labelledby="practice-troubleshooting">
+                    <h3 id="practice-troubleshooting">If the click is missing or uneven</h3>
+                    <p>Check device volume, the selected audio output, and whether the browser tab is muted. Press Stop and then Start to retry audio after interacting with the page. A browser with Web Audio support is required.</p>
+                    <p>Keep this tab visible and the device awake. Background tabs, screen locking, and heavy browser workloads can disrupt timing; wireless audio can add delay. This is a practice reference, not a recording clock or a precision timing measurement.</p>
+                </section>
+                <section aria-labelledby="practice-session">
+                    <h3 id="practice-session">What is saved?</h3>
+                    <p>The tempo and playing state live only in this open page. Reloading starts a fresh session at 120 BPM. There is no practice history, recording, microphone access, or audio export.</p>
+                    <p>Clicks are generated in your browser, not downloaded as sound files. Fonts and icons load from external providers; see the <a href="../privacy.html">site privacy information</a> for the distinction between local tool use and website requests.</p>
+                </section>
+            </div>
+        </section>
     </main>
     <footer>
         <div class="footer-inner wrap">

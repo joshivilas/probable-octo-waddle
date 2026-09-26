@@ -10,7 +10,8 @@
   const promptList = document.getElementById('prompt-list');
   const categoryFilters = document.getElementById('category-filters');
   const copyStatus = document.getElementById('copy-status');
-  const entries = promptCategories.flatMap(category => category.prompts.map(prompt => ({ category, prompt })));
+  const visibleCategories = promptCategories.filter(category => category.prompts.length > 0);
+  const entries = visibleCategories.flatMap(category => category.prompts.map(prompt => ({ category, prompt })));
   let activeCategory = 'all';
 
   function refreshIcons() {
@@ -44,21 +45,10 @@
     return button;
   }
 
-  function createResultLink(prompt, resultUrl, iconName) {
-    let url;
-    try {
-      url = new URL(resultUrl);
-    } catch {
-      return null;
-    }
-    if (!['https:', 'http:'].includes(url.protocol)) return null;
-    const link = createElement('a', 'result-link');
-    link.href = url.href;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.setAttribute('aria-label', `View result for ${prompt.title} (opens in a new tab)`);
-    link.append(createIcon(iconName), createElement('span', '', 'View result'), createIcon('arrow-up-right'));
-    return link;
+  function createGuidanceSection(heading, content) {
+    const section = createElement('div', 'prompt-guidance');
+    section.append(createElement('h4', '', heading), createElement('p', '', content));
+    return section;
   }
 
   function createPromptCard({category, prompt}) {
@@ -107,21 +97,33 @@
       }
     });
     actions.append(state, copyButton);
-    card.append(topLine, title, text, tags);
-    if (category.id === 'video' || category.id === 'image') {
-      const isVideo = category.id === 'video';
-      const resultLink = createResultLink(prompt, isVideo ? prompt.resultVideoUrl : prompt.resultImageUrl, isVideo ? 'play' : 'image');
-      if (resultLink) card.append(resultLink);
-    }
+    card.append(topLine, title);
+    card.append(createGuidanceSection('When to use it', prompt.useWhen));
+    card.append(createGuidanceSection('Prepare your input', prompt.inputs));
+    card.append(createElement('h4', 'template-heading', 'Prompt template'), text);
     card.append(actions);
+    const guide = createElement('details', 'prompt-example');
+    guide.append(createElement('summary', '', `Example and review guide: ${prompt.title}`));
+    guide.append(createGuidanceSection('Example input', prompt.exampleInput));
+    guide.append(createGuidanceSection('Illustrative result — not a tested AI output', prompt.illustrativeResult));
+    const checks = createElement('div', 'prompt-guidance');
+    const checklist = createElement('ul', 'prompt-checks');
+    prompt.checks.forEach(check => checklist.append(createElement('li', '', check)));
+    checks.append(createElement('h4', '', 'How to evaluate the response'), checklist);
+    guide.append(checks, createGuidanceSection('Limitations', prompt.limitations));
+    card.append(guide, tags);
     return card;
   }
 
   function renderPrompts() {
     const terms = searchInput.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    const selectedCategory = promptCategories.find(category => category.id === activeCategory);
+    const selectedCategory = visibleCategories.find(category => category.id === activeCategory);
     const matches = entries.filter(({category, prompt}) => {
-      const searchText = [category.title, prompt.title, prompt.text, ...(prompt.tags || [])].join(' ').toLowerCase();
+      const searchText = [
+        category.title, prompt.title, prompt.text, prompt.useWhen, prompt.inputs,
+        prompt.exampleInput, prompt.illustrativeResult, prompt.limitations,
+        ...prompt.checks, ...(prompt.tags || [])
+      ].join(' ').toLowerCase();
       return (activeCategory === 'all' || category.id === activeCategory) && terms.every(term => searchText.includes(term));
     });
     if (sortInput.value === 'title') matches.sort((first, second) => first.prompt.title.localeCompare(second.prompt.title));
@@ -132,13 +134,11 @@
     document.getElementById('results-title').textContent = selectedCategory ? `${selectedCategory.title} prompts` : 'All prompts';
     document.getElementById('result-count').textContent = `${matches.length} ${matches.length === 1 ? 'prompt' : 'prompts'}`;
     document.getElementById('empty-state').hidden = matches.length !== 0;
-    document.getElementById('empty-title').textContent = !terms.length && selectedCategory ? 'This category is still growing' : 'No matching prompts';
-    document.getElementById('empty-description').textContent = !terms.length && selectedCategory ? `No prompts have been added to ${selectedCategory.title} yet.` : 'Nothing in this selection matches your search.';
     refreshIcons();
   }
 
   categoryFilters.append(createCategoryButton('all', 'All prompts', 'layout-grid', entries.length));
-  promptCategories.forEach(category => categoryFilters.append(createCategoryButton(category.id, category.title, category.icon || 'files', category.prompts.length)));
+  visibleCategories.forEach(category => categoryFilters.append(createCategoryButton(category.id, category.title, category.icon || 'files', category.prompts.length)));
   searchInput.addEventListener('input', renderPrompts);
   sortInput.addEventListener('change', renderPrompts);
   document.getElementById('reset-filters').addEventListener('click', () => {
@@ -148,7 +148,7 @@
     renderPrompts();
     searchInput.focus();
   });
-  document.getElementById('library-total').textContent = `${entries.length} ${entries.length === 1 ? 'prompt' : 'prompts'} / ${promptCategories.length} categories`;
+  document.getElementById('library-total').textContent = `${entries.length} ${entries.length === 1 ? 'prompt' : 'prompts'} / ${visibleCategories.length} categories`;
   renderPrompts();
   document.getElementById('library').hidden = false;
   loadStatus.hidden = true;

@@ -1,4 +1,11 @@
 {
+  "routes": [
+    {
+      "route": "/color-compare/color-compare2.html",
+      "redirect": "/color-compare/color-compare.html",
+      "statusCode": 301
+    }
+  ],
   "platform": {
     "apiRuntime": "node:22"
   }

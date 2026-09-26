@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Winner Declare 🎉</title>
   <style>
     body {
@@ -10,7 +12,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      flex-direction: column;
+      gap: 24px;
       margin: 0;
       padding: 20px;
     }
@@ -21,7 +25,7 @@
       border-radius: 20px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
       text-align: center;
-      width: 420px;
+      width: min(100%, 500px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       animation: slideIn 0.6s ease-out;
     }
@@ -79,14 +83,14 @@
     .add-btn:active {
       transform: translateY(0);
     }
-    ul {
+    #winnerList {
       list-style: none;
       padding: 0;
       margin: 1.5rem 0;
       max-height: 200px;
       overflow-y: auto;
     }
-    li {
+    #winnerList li {
       background: linear-gradient(135deg, #ffe0dc, #ffd1cc);
       margin: 8px 0;
       padding: 10px 15px;
@@ -96,7 +100,7 @@
       transition: all 0.3s ease;
       border: 1px solid rgba(255, 111, 97, 0.2);
     }
-    li:hover {
+    #winnerList li:hover {
       transform: translateX(5px);
       box-shadow: 0 4px 12px rgba(255, 111, 97, 0.2);
     }
@@ -154,12 +158,35 @@
     .generate-btn:active {
       transform: translateY(0);
     }
+    * { box-sizing: border-box; }
+    .site-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; }
+    .site-nav a { display: inline-flex; align-items: center; min-height: 44px; }
+    a { color: #71334b; text-underline-offset: 3px; }
+    a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid #71334b; outline-offset: 4px; }
+    .publisher-guide { width: min(100%, 760px); background: rgba(255, 255, 255, 0.95); padding: 28px; border-radius: 20px; line-height: 1.65; color: #352d35; }
+    .publisher-guide h2 { margin: 0 0 16px; font-size: 1.4rem; }
+    .publisher-guide h3 { margin: 24px 0 8px; font-size: 1.1rem; }
+    .publisher-guide p { margin: 0 0 12px; }
+    .publisher-guide ol { padding-left: 24px; }
+    .publisher-guide li + li { margin-top: 8px; }
+    .publisher-guide code { overflow-wrap: anywhere; }
+    @media (max-width: 480px) {
+      body { padding: 12px; }
+      .container, .publisher-guide { padding: 20px; }
+      h1 { font-size: 1.6rem; }
+    }
   </style>
 </head>
 <body>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="../index.html">Home</a>
+    <a href="../about.html">About</a>
+    <a href="../privacy.html">Privacy</a>
+  </nav>
   <div class="container">
     <h1>🏆 Declare Winners</h1>
     <div class="input-group">
+      <label for="winnerInput">Winner name</label>
       <input type="text" id="winnerInput" placeholder="Enter winner name" onkeypress="handleKeyPress(event)">
       <button class="add-btn" onclick="addWinner()">Add Winner</button>
     </div>
@@ -173,7 +200,28 @@
         <option value="waddle.html">🎉 Elegant Thank You - Smooth animations and glassmorphism</option>
       </select>
     </div>
-    
+
+    <main class="publisher-guide" aria-labelledby="guide-title">
+      <h2 id="guide-title">Turn a finished result into a celebration</h2>
+      <p>This page presents names you have already chosen. It does not draw a random winner, rank entries, or verify a competition result. Add names only when you are ready to announce them.</p>
+      <h3>Build and check a link</h3>
+      <ol>
+        <li>Enter one name and press <strong>Add Winner</strong> or Enter. Repeat for each person. Names appear in the order added; duplicates are not removed automatically.</li>
+        <li>Check spelling and order before continuing. There is no remove or edit control for added names. If you make a mistake, reload the page and rebuild the list.</li>
+        <li>Choose a style and press <strong>Generate Celebration Link</strong>. Paste the link into a new tab and inspect it before sharing. This does not send a message to anyone.</li>
+      </ol>
+      <h3>Example: announce a team challenge</h3>
+      <p>Add “Alex,” then “Sam.” Choose <strong>Winners Display</strong> for a page that shows both names immediately with confetti. Choose <strong>Retro Thank You</strong> for a pixel-style thank-you, or <strong>Elegant Thank You</strong> for the alternative animated design. On those two thank-you pages, recipients press the start/celebrate button to reveal names and trigger sound and confetti.</p>
+      <p>Open your chosen result, confirm both names, and only then paste the complete link into your team chat. All three styles use the same ordered list; changing the style is not a new selection of winners.</p>
+      <h3>Current limits and troubleshooting</h3>
+      <p>The current link encoder supports Latin-1 characters, not all writing systems. Emoji and many non-Latin names prevent link generation. If an acceptable Latin-letter spelling is not available, use a different way to make the announcement rather than changing someone's name without agreement.</p>
+      <p>Clipboard access works best on HTTPS with copying allowed in your browser. If copying fails, use the full link in the confirmation dialog when one appears, or retry in a browser that allows clipboard access. Verify the pasted result instead of relying on the “copied” message alone.</p>
+      <p>A blank list or “Invalid data” message on the result can mean the link was cut off or altered. Copy it again with everything after <code>#</code> intact. Long lists produce long links, so check that your messaging service preserves the entire address. For silent thank-you pages, check tab/device volume and press the celebration button.</p>
+      <h3>Names, links, and your session</h3>
+      <p>Your working list is held in this page's memory and is cleared on reload. Generated links contain the names encoded in the URL fragment after <code>#</code>. Encoding is not encryption: anyone with the full link can read or change the list. There is no password, expiry, or revoke control.</p>
+      <p>The fragment is not sent as part of the normal page request to the host, but the full link can remain in browser history, the clipboard, and shared messages. Use display names suitable for your audience and avoid confidential information. Previously shared links continue to contain their original names even after you reload this generator. See <a href="../privacy.html">Privacy</a> for site-level details.</p>
+    </main>
+
     <button class="generate-btn" onclick="generateLink()">Generate Celebration Link 🎉</button>
   </div>
 
