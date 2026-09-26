@@ -1,13 +1,13 @@
 :root {
-  --page: #f5f6f3;
+  --page: #f8faf8;
   --paper: #fff;
-  --ink: #242e2a;
-  --muted: #78817b;
-  --line: #e0e4de;
-  --green: #275c47;
+  --ink: #192c26;
+  --muted: #586b63;
+  --line: #dce4de;
+  --green: #245e44;
   --accent: #d96c53;
   --font: "DM Sans", sans-serif;
-  --display: "Manrope", sans-serif;
+  --display: "Space Grotesk", sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -77,14 +77,14 @@ svg {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  background: #fafbf8;
+  background: var(--paper);
 }
 .brand {
   display: flex;
   align-items: center;
   text-decoration: none;
   font-family: var(--display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 24px;
   color: var(--ink);
 }
@@ -106,10 +106,25 @@ svg {
 .brand-dot {
   color: var(--accent);
 }
-.header-label {
-  font-size: 10px;
-  font-weight: 600;
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--muted);
+  text-decoration: none;
+}
+.site-nav a:hover {
+  color: var(--green);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .privacy {
   display: flex;
@@ -189,7 +204,7 @@ h1 span {
 .studio {
   display: grid;
   flex: 1 0 400px;
-  grid-template-columns: minmax(0, 1fr) 326px;
+  grid-template-columns: minmax(0, 1fr) 12px minmax(280px, var(--preview-width, 42%));
   background: white;
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -198,12 +213,87 @@ h1 span {
   min-height: 400px;
   animation: arrive 0.45s ease both;
 }
+.style-tabs {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 4px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.style-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+}
+.style-tab[aria-selected="true"] {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
+.style-tab:hover {
+  background: #eaf2ec;
+}
+.style-tab:focus-visible {
+  outline-offset: -3px;
+}
+#polaroid-settings {
+  clear: both;
+  margin-bottom: 12px;
+}
+#polaroid-settings label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+#caption {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--paper);
+}
 .editor {
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
   border-right: 1px solid var(--line);
+}
+.preview-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: col-resize;
+  touch-action: none;
+  background: var(--paper);
+  border-right: 1px solid var(--line);
+}
+.preview-divider svg {
+  width: 12px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.preview-divider:hover,
+.preview-divider:focus-visible,
+.preview-divider.resizing {
+  background: #dce8df;
+  outline: 2px solid var(--green);
+  outline-offset: -2px;
+}
+.studio:has(.preview-divider.resizing) {
+  user-select: none;
 }
 .editor-toolbar {
   height: 46px;
@@ -354,6 +444,7 @@ h1 span {
   padding: 10px 18px;
   flex-shrink: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 14px;
   min-height: 56px;
@@ -406,18 +497,18 @@ select {
 }
 .preview-stage {
   flex: 1 1 0;
-  min-height: 80px;
+  min-height: 260px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 10px 0 0;
-  background-color: #f5f6f3;
+  background-color: #f5f7f5;
   background-image:
-    linear-gradient(45deg, #e9ece6 25%, transparent 25%),
-    linear-gradient(-45deg, #e9ece6 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #e9ece6 75%),
-    linear-gradient(-45deg, transparent 75%, #e9ece6 75%);
+    linear-gradient(45deg, #edf0ed 25%, transparent 25%),
+    linear-gradient(-45deg, #edf0ed 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #edf0ed 75%),
+    linear-gradient(-45deg, transparent 75%, #edf0ed 75%);
   background-size: 16px 16px;
   background-position:
     0 0,
@@ -425,7 +516,7 @@ select {
     8px -8px,
     -8px 0;
   border-radius: 3px;
-  padding: 12px;
+  padding: 20px;
 }
 #preview {
   display: block;
@@ -618,9 +709,6 @@ footer svg {
   main {
     padding: 16px 24px 12px;
   }
-  .studio {
-    grid-template-columns: minmax(0, 1fr) 290px;
-  }
   .settings {
     padding: 14px 16px;
   }
@@ -628,11 +716,11 @@ footer svg {
     gap: 10px;
     flex-wrap: wrap;
   }
-  .header-label {
-    display: none;
-  }
 }
-@media (min-width: 721px) and (max-height: 650px) {
+@media (min-width: 721px) and (max-height: 850px) {
+  .preview-stage {
+    min-height: 180px;
+  }
   .settings {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -653,8 +741,16 @@ footer svg {
 }
 @media (max-width: 720px) {
   .app-header {
-    height: 56px;
-    padding: 0 16px;
+    height: auto;
+    min-height: 56px;
+    padding: 10px 16px 0;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .site-nav {
+    order: 1;
+    flex-basis: 100%;
+    gap: 24px;
   }
   .brand {
     font-size: 21px;
@@ -688,6 +784,9 @@ footer svg {
     grid-template-columns: 1fr;
     min-height: 0;
   }
+  .preview-divider {
+    display: none;
+  }
   .editor {
     border-right: 0;
     border-bottom: 1px solid var(--line);
@@ -717,6 +816,8 @@ footer svg {
   }
   .preview-stage {
     flex: none;
+    aspect-ratio: auto;
+    min-height: 80px;
     height: clamp(140px, 24vh, 240px);
     height: clamp(140px, 24dvh, 240px);
   }

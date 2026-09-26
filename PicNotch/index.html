@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f5f6f3" />
-    <title>PicNotch - Postcard Studio</title>
+    <meta name="theme-color" content="#f8faf8" />
+    <title>PicNotch - Photo Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -32,25 +32,20 @@
         ><span class="brand-icon"><i data-lucide="stamp"></i></span
         >PicNotch<span class="brand-dot">.</span></a
       >
-      <span class="header-label">THE LITTLE THINGS, COLLECTED.</span>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html#tools">The collection</a>
+        <a href="../about.html">About</a>
+        <a href="../privacy.html">Privacy</a>
+      </nav>
       <span class="privacy"
         ><i data-lucide="shield-check"></i> On-device editing</span
       >
     </header>
 
-    <main>
-      <div class="page-heading">
-        <div>
-          <div class="eyebrow">YOUR CREATIVE DESK</div>
-          <h1>Postcard studio<span>.</span></h1>
-        </div>
-        <button class="button primary" id="upload-button">
-          <i data-lucide="image-plus"></i> Choose image
-        </button>
-        <input type="file" id="file-input" accept="image/*" hidden />
-      </div>
+    <main aria-label="Photo studio">
+      <div class="style-tabs" id="style-tabs" role="tablist" aria-label="Photo style"></div>
 
-      <div class="studio">
+      <div class="studio" id="studio-panel" role="tabpanel" aria-labelledby="style-postcard">
         <section class="editor" aria-label="Image editor">
           <div class="editor-toolbar">
             <span class="section-label"><i data-lucide="crop"></i> CROP</span>
@@ -129,12 +124,30 @@
               <option value="1">Square 1:1</option>
               <option value="1.5">Classic 3:2</option>
             </select>
+            <button class="button primary" id="upload-button">
+              <i data-lucide="image-plus"></i> Choose image
+            </button>
+            <input type="file" id="file-input" accept="image/*" hidden />
           </div>
         </section>
 
-        <aside class="settings" aria-label="Sticker settings">
+        <div
+          class="preview-divider"
+          id="preview-divider"
+          role="separator"
+          tabindex="0"
+          aria-label="Preview panel width"
+          aria-orientation="vertical"
+          aria-controls="preview-settings"
+          aria-valuemin="25"
+          aria-valuemax="65"
+          aria-valuenow="42"
+          title="Resize preview panel (Left/Right arrows)"
+        ><i data-lucide="grip-vertical" aria-hidden="true"></i></div>
+
+        <aside class="settings" id="preview-settings" aria-label="Sticker settings">
           <div class="preview-heading">
-            <span class="section-label">YOUR POSTCARD</span
+            <span class="section-label" id="preview-heading">YOUR POSTCARD</span
             ><span class="live-label"><span></span> Live preview</span>
           </div>
           <div class="preview-stage">
@@ -147,7 +160,7 @@
           </div>
           <div class="preview-caption">
             <span id="output-size">&mdash;</span
-            ><span>PNG <span class="tiny-dot">/</span> TRANSPARENT</span>
+            ><span>PNG <span class="tiny-dot">/</span> <span id="output-finish">TRANSPARENT</span></span>
           </div>
 
           <fieldset id="sticker-controls">
@@ -164,6 +177,7 @@
               value="6"
               step="1"
             />
+            <div id="postcard-settings">
             <div class="control-row edge-row">
               <label for="perforation">Perforation</label
               ><output id="perforation-value" for="perforation">Medium</output>
@@ -176,6 +190,11 @@
               value="2"
               step="1"
             />
+            </div>
+            <div id="polaroid-settings" hidden>
+              <label for="caption">Caption (optional)</label>
+              <input id="caption" type="text" maxlength="60" autocomplete="off" />
+            </div>
             <div class="control-row color-row">
               <span id="paper-color-label">Paper color</span>
               <div
@@ -227,7 +246,7 @@
             </div>
           </fieldset>
           <button class="button download" id="download" disabled>
-            <i data-lucide="download"></i> Save postcard
+            <i data-lucide="download"></i> <span id="download-label">Save postcard</span>
             <i data-lucide="arrow-down-right" class="download-arrow"></i>
           </button>
           <div class="export-note" id="export-note">PNG image</div>
