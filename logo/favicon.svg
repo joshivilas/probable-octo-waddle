@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <title>Probable Octo Waddle</title>
+  <rect width="256" height="256" rx="48" fill="#edf4ee"/>
+  <defs>
+    <mask id="face" maskUnits="userSpaceOnUse" x="0" y="0" width="256" height="256">
+      <rect width="256" height="256" fill="white"/>
+      <circle cx="107" cy="105" r="6.5" fill="black"/>
+      <circle cx="149" cy="105" r="6.5" fill="black"/>
+      <path d="M118 125Q128 133 138 125" stroke="black" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    </mask>
+  </defs>
+  <g fill="#245e44" stroke="#245e44" mask="url(#face)">
+    <path d="M74 116H49Q29 116 29 98M76 137L48 149Q30 159 24 143M94 149L72 183Q60 201 47 189M115 157V191Q115 217 94 217M140 157V194Q140 216 161 216M160 147L181 182Q193 199 207 187M180 134L206 148Q225 158 232 140M182 112H207Q227 112 227 94" fill="none" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M68 120V102C68 66 92 42 128 42S188 66 188 102V120C188 146 164 164 128 164S68 146 68 120Z" stroke="none"/>
+  </g>
+</svg>

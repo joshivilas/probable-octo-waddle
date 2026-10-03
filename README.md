@@ -3,6 +3,26 @@ This is static website with a collection of useful web tools, where you can decl
 
 You can use application here - https://jolly-wave-0f389ea00.2.azurestaticapps.net
 
+## Site logo
+
+All branded headers use [the octopus SVG](logo/octo-waddle-logo.svg), including
+PicNotch and the three celebration results. The existing site/tool names and
+navigation destinations are unchanged. Header images are decorative beside the
+visible brand name, load without JavaScript, and scale within the existing
+desktop/mobile header sizes.
+
+Every HTML page includes [an SVG favicon](logo/favicon.svg), a
+[32px PNG fallback](logo/favicon-32.png), and a
+[180px Apple touch icon](logo/apple-touch-icon.png). These variants use a pale
+background so the green mark remains visible on light and dark browser chrome.
+The favicon artwork is derived from the SVG master; keep them in sync when
+changing the design. The opaque PNG icons are composited from the matching
+transparent exports over `#edf4ee`. The original SVG, transparent PNG sizes, and
+concept previews remain in [logo](logo).
+
+Run the branding, local asset path, and existing site checks with
+`node --test tests/site.test.cjs`.
+
 ## Azure Functions and Application Insights
 
 The GitHub Actions deployment publishes the static site from the repository root

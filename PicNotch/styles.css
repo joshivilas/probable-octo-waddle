@@ -91,17 +91,19 @@ svg {
 .brand-icon {
   display: grid;
   place-items: center;
-  background: var(--green);
-  color: white;
+  background: #edf4ee;
   width: 35px;
   height: 35px;
+  flex-shrink: 0;
+  padding: 2px;
   border-radius: 7px;
   margin-right: 10px;
   transform: rotate(-7deg);
 }
-.brand-icon svg {
-  width: 22px;
-  height: 22px;
+.brand-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .brand-dot {
   color: var(--accent);

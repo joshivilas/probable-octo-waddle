@@ -37,6 +37,74 @@ test('inline JavaScript remains syntactically valid on all pages', () => {
     }
 });
 
+test('all branded headers use the local octopus logo without changing names or navigation', () => {
+    const legacy = path.join(root, 'color-compare', 'color-compare2.html');
+    for (const file of htmlFiles(root).filter(file => file !== legacy)) {
+        const source = fs.readFileSync(file, 'utf8');
+        const brands = [...source.matchAll(/<a\b([^>]*\bclass="brand"[^>]*)>([\s\S]*?)<\/a>/g)];
+        assert.equal(brands.length, 1, file);
+        const [, attributes, content] = brands[0];
+        const images = [...content.matchAll(/<img\b[^>]*>/g)];
+        assert.equal(images.length, 1, file);
+        const image = images[0][0];
+        const src = image.match(/\bsrc="([^"]+)"/)?.[1];
+        assert.ok(src, file);
+        assert.equal(path.resolve(path.dirname(file), src), path.join(root, 'logo', 'octo-waddle-logo.svg'), file);
+        assert.ok(fs.existsSync(path.resolve(path.dirname(file), src)), file);
+        assert.match(image, /\balt=""/, file);
+        assert.match(image, /\bwidth="40"/, file);
+        assert.match(image, /\bheight="40"/, file);
+        assert.doesNotMatch(content, /data-lucide=|✳/, file);
+        const picNotch = file === path.join(root, 'PicNotch', 'index.html');
+        const href = picNotch ? './index.html' : path.dirname(file) === root ? 'index.html' : '../index.html';
+        assert.ok(attributes.includes(`href="${href}"`), file);
+        assert.ok(content.includes(picNotch ? 'PicNotch' : 'Probable<br>Octo Waddle'), file);
+    }
+});
+
+test('every page has local SVG, PNG, and Apple icons with correct asset paths', () => {
+    const expected = [
+        { rel: 'icon', type: 'image/png', sizes: '32x32', name: 'favicon-32.png' },
+        { rel: 'icon', type: 'image/svg+xml', sizes: 'any', name: 'favicon.svg' },
+        { rel: 'apple-touch-icon', sizes: '180x180', name: 'apple-touch-icon.png' }
+    ];
+    for (const file of htmlFiles(root)) {
+        const source = fs.readFileSync(file, 'utf8');
+        const head = source.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)[1];
+        const icons = [...head.matchAll(/<link\b[^>]*>/g)]
+            .map(([tag]) => Object.fromEntries([...tag.matchAll(/([\w-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value])))
+            .filter(attributes => ['icon', 'apple-touch-icon'].includes(attributes.rel));
+        assert.equal(icons.length, expected.length, file);
+        for (const icon of expected) {
+            const matches = icons.filter(attributes => attributes.rel === icon.rel && attributes.sizes === icon.sizes);
+            assert.equal(matches.length, 1, `${file}: ${icon.name}`);
+            const attributes = matches[0];
+            if (icon.type) assert.equal(attributes.type, icon.type, file);
+            assert.ok(attributes.href, file);
+            const asset = path.resolve(path.dirname(file), attributes.href);
+            assert.equal(asset, path.join(root, 'logo', icon.name), file);
+            assert.ok(fs.existsSync(asset), asset);
+        }
+    }
+});
+
+test('browser icons preserve the master artwork and declare real PNG dimensions', () => {
+    const master = fs.readFileSync(path.join(root, 'logo', 'octo-waddle-logo.svg'), 'utf8');
+    const favicon = fs.readFileSync(path.join(root, 'logo', 'favicon.svg'), 'utf8');
+    const paths = svg => [...svg.matchAll(/<path\b[^>]*\bd="([^"]+)"/g)].map(match => match[1]);
+    const circles = svg => [...svg.matchAll(/<circle\b[^>]*>/g)].map(match => match[0]);
+    assert.deepEqual(paths(favicon), paths(master));
+    assert.deepEqual(circles(favicon), circles(master));
+    assert.match(favicon, /viewBox="0 0 256 256"/);
+    assert.match(favicon, /<rect width="256" height="256" rx="48" fill="#edf4ee"/);
+    for (const [name, size] of [['favicon-32.png', 32], ['apple-touch-icon.png', 180]]) {
+        const png = fs.readFileSync(path.join(root, 'logo', name));
+        assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', name);
+        assert.equal(png.readUInt32BE(16), size, name);
+        assert.equal(png.readUInt32BE(20), size, name);
+    }
+});
+
 test('instruction sections are native disclosures closed by default', () => {
     const guides = [
         ['index.html', /\binstruction-guide\b/],
