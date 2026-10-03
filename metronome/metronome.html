@@ -4,129 +4,17 @@
     <meta charset="UTF-8">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A free browser metronome with adjustable tempo from 30 to 240 BPM, audio clicks, and a visual beat indicator.">
+    <meta name="description" content="Practice with a free metronome featuring tap tempo, beat accents, subdivisions, count-in, a timer, progressive tempo training, and local presets.">
     <title>Metronome - Probable Octo Waddle</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../info-pages.css">
+    <link rel="stylesheet" href="metronome.css">
     <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-    <style>
-        button, input { font: inherit; }
-        button { cursor: pointer; }
-        .practice-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 48px; padding: 48px 0 64px; align-items: center; }
-        .pulse-section { min-width: 0; padding: 32px 0; text-align: center; background-image: radial-gradient(#b3c8bb66 .7px, transparent .7px); background-size: 14px 14px; }
-        .bpm-label { font: 500 11px var(--display); text-transform: uppercase; color: var(--muted); margin: 0 0 18px; }
-        .bpm-display { font: 500 88px/1.15 var(--display); font-variant-numeric: tabular-nums; color: var(--ink); min-width: 3ch; }
-        .bpm-unit { color: var(--muted); font: 500 12px var(--display); margin-top: 8px; }
-        .tempo-stepper { display: flex; justify-content: center; align-items: center; gap: 24px; }
-        .icon-button { position: relative; display: inline-grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 5px; background: white; color: var(--ink); flex-shrink: 0; }
-        .icon-button svg { width: 17px; height: 17px; }
-        .icon-button:hover { background: #eaf2ec; border-color: #91ae9d; }
-        .icon-button:disabled { opacity: .4; cursor: not-allowed; }
-        .icon-button::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--ink); color: white; border-radius: 4px; padding: 5px 9px; font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none; }
-        .icon-button:hover::after, .icon-button:focus-visible::after { opacity: 1; }
-        .beat-indicator { display: flex; align-items: center; justify-content: center; gap: 10px; width: 132px; height: 42px; margin: 28px auto 0; color: var(--muted); font-size: 12px; background: var(--paper); }
-        .beat-indicator::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #bdd3c5; flex-shrink: 0; }
-        .beat-indicator.active::before { background: #245e44; box-shadow: 0 0 0 5px #d8f3df; }
-        .settings-section { border-left: 1px solid var(--line); padding-left: 40px; min-width: 0; }
-        .settings-section h2 { font: 500 23px/1.3 var(--display); margin: 0 0 28px; }
-        .control-section { margin-bottom: 28px; }
-        .tempo-input-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-        .control-label { font-size: 13px; color: var(--muted); }
-        .tempo-input { width: 84px; height: 44px; background: white; border: 1px solid var(--line); border-radius: 5px; padding: 0 10px; color: var(--ink); font: 500 15px var(--display); text-align: center; }
-        .tempo-input[aria-invalid="true"] { border-color: #a24132; }
-        .tempo-controls { min-width: 0; }
-        #tempoSlider { display: block; width: 100%; height: 30px; margin: 0; accent-color: var(--green); cursor: pointer; }
-        .range-labels { display: flex; justify-content: space-between; font: 400 11px var(--display); color: var(--muted); margin-top: 6px; }
-        .button-section { display: flex; gap: 12px; }
-        .start-stop-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; flex: 1; min-height: 48px; border: 1px solid var(--ink); border-radius: 5px; background: var(--ink); color: white; font-size: 14px; }
-        .start-stop-btn svg { width: 18px; height: 18px; }
-        .start-stop-btn:hover { background: var(--green); }
-        .start-stop-btn.running { background: #a24132; border-color: #a24132; }
-        .start-stop-btn.running:hover { background: #873629; }
-        .start-stop-btn .stop-icon, .start-stop-btn.running .play-icon { display: none; }
-        .start-stop-btn.running .stop-icon { display: block; }
-        .reset-btn { height: 48px; width: 48px; }
-        .settings-note { display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--line); margin: 24px 0 0; padding-top: 18px; font-size: 12px; color: var(--muted); }
-        .settings-note svg { width: 15px; height: 15px; flex-shrink: 0; }
-        @media (max-width: 900px) {
-            .practice-layout { gap: 28px; }
-            .settings-section { padding-left: 28px; }
-            .tempo-stepper { gap: 12px; }
-            .bpm-display { font-size: 64px; }
-        }
-        @media (max-width: 700px) {
-            .practice-layout { grid-template-columns: minmax(0, 1fr); padding: 24px 0 40px; gap: 28px; }
-            .pulse-section { padding: 24px 0 16px; }
-            .settings-section { padding: 28px 0 0; border-left: 0; border-top: 1px solid var(--line); }
-            .settings-section h2 { font-size: 21px; margin-bottom: 22px; }
-            .tempo-stepper { gap: 20px; }
-        }
-        body { height: 100vh; height: 100dvh; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
-        main { min-height: 0; display: flex; flex-direction: column; }
-        .header-inner { min-height: 64px; }
-        .intro { flex-shrink: 0; padding: 20px 0 18px; }
-        .intro h1 { margin: 10px 0 8px; }
-        .practice-layout { flex: 1; min-height: 0; padding: 20px 0; gap: 28px; }
-        .pulse-section { padding: 16px 0; }
-        .settings-section h2 { margin-bottom: 18px; }
-        .control-section { margin-bottom: 18px; }
-        .settings-note { margin-top: 16px; padding-top: 12px; }
-        .reset-btn::after { left: auto; right: 0; transform: none; }
-        footer { padding: 14px 0; }
-        footer p { display: none; }
-        @media (max-width: 700px) {
-            .header-inner { min-height: 56px; padding-block: 8px; flex-wrap: nowrap; }
-            .site-nav a:first-child { display: none; }
-            .intro { padding: 14px 0; }
-            .intro h1 { font-size: 30px; margin: 8px 0 4px; }
-            .practice-layout { grid-template-rows: minmax(140px, 1fr) auto; gap: 12px; padding: 12px 0 16px; }
-            .pulse-section { padding: 8px 0; }
-            .bpm-label { margin-bottom: 10px; }
-            .beat-indicator { margin-top: 8px; height: 30px; }
-            .settings-section { padding-top: 16px; }
-            .settings-section h2 { margin-bottom: 12px; }
-            .tempo-input-row { margin-bottom: 8px; }
-            .settings-note { display: none; }
-            .footer-inner { flex-direction: row; justify-content: center; }
-            .footer-inner > div { display: none; }
-            footer { padding: 10px 0; }
-        }
-        @media (max-height: 700px) {
-            .intro .eyebrow, .intro p { display: none; }
-            .intro { padding: 10px 0; }
-            .intro h1 { font-size: 28px; margin: 0; }
-            .practice-layout { padding-block: 10px; }
-            .settings-section h2, .settings-note { display: none; }
-            .bpm-display { font-size: 56px; }
-            .bpm-label { margin-bottom: 8px; }
-            .beat-indicator { margin-top: 6px; height: 28px; }
-            .control-section { margin-bottom: 12px; }
-        }
-        @media (max-height: 500px) and (min-width: 560px) {
-            .header-inner { min-height: 48px; padding-block: 4px; }
-            .intro { padding: 8px 0; }
-            .practice-layout { grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr); grid-template-rows: 1fr; gap: 24px; }
-            .settings-section { border-top: 0; border-left: 1px solid var(--line); padding: 0 0 0 24px; }
-            .pulse-section { padding: 0; }
-            .tempo-input-row { margin-bottom: 4px; }
-            .control-section { margin-bottom: 8px; }
-            footer { padding: 6px 0; }
-        }
-        body { height: auto; min-height: 100vh; min-height: 100dvh; grid-template-rows: auto 1fr auto; }
-        .practice-layout { flex: none; min-height: 300px; }
-        .practice-guide { border-top: 1px solid var(--line); padding: 28px 0 40px; line-height: 1.65; }
-        .practice-guide h2 { font: 500 24px/1.3 var(--display); margin: 0 0 20px; }
-        .practice-guide h3 { font: 500 18px/1.4 var(--display); margin: 0 0 10px; }
-        .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 36px; }
-        .practice-guide p { margin: 0 0 12px; }
-        .practice-guide ol { margin: 0; padding-left: 24px; }
-        .practice-guide li + li { margin-top: 8px; }
-        @media (max-width: 700px) {
-            .guide-grid { grid-template-columns: minmax(0, 1fr); }
-        }
-    </style>
+    <script defer src="engine.js"></script>
+    <script defer src="settings.js"></script>
+    <script defer src="app.js"></script>
 </head>
 <body>
     <a href="#content" class="skip-link">Skip to metronome</a>
@@ -137,348 +25,117 @@
         </div>
     </header>
     <main class="wrap" id="content" tabindex="-1">
-        <section class="intro" aria-labelledby="page-title">
-            <div class="eyebrow">The everyday collection / Practice</div>
-            <h1 id="page-title">Metronome<span class="title-dot">.</span></h1>
-            <p>Find your rhythm. Make every beat count.</p>
-        </section>
+        <div class="page-heading">
+            <div><div class="eyebrow">The everyday collection / Practice</div><h1>Metronome<span class="title-dot">.</span></h1></div>
+            <p>A steady pulse. A little progress.</p>
+        </div>
+        <noscript><p class="notice">Enable JavaScript to use the metronome. The practice guide below can still be opened and read.</p></noscript>
         <div class="practice-layout">
-            <section class="pulse-section" aria-labelledby="tempo-title">
-                <h2 class="bpm-label" id="tempo-title">Current tempo</h2>
-                <div class="tempo-stepper">
-                    <button type="button" class="icon-button" id="decreaseBtn" aria-label="Decrease tempo" data-tooltip="Decrease tempo"><i data-lucide="minus" aria-hidden="true"></i></button>
-                    <div><div class="bpm-display" id="bpmDisplay">120</div><div class="bpm-unit">BPM</div></div>
-                    <button type="button" class="icon-button" id="increaseBtn" aria-label="Increase tempo" data-tooltip="Increase tempo"><i data-lucide="plus" aria-hidden="true"></i></button>
-                </div>
-                <div class="beat-indicator" id="beatIndicator" role="status" aria-live="polite">Ready</div>
-            </section>
-            <section class="settings-section" aria-labelledby="settings-title">
-                <h2 id="settings-title">Set the pace</h2>
-                <div class="control-section">
-                    <div class="tempo-input-row"><label class="control-label" for="tempoInput">Beats per minute</label><input type="number" id="tempoInput" min="30" max="240" value="120" class="tempo-input" aria-label="Tempo input"></div>
-                    <div class="tempo-controls">
-                        <input type="range" id="tempoSlider" min="30" max="240" value="120" aria-label="Tempo slider">
-                        <div class="range-labels" aria-hidden="true"><span>30 BPM</span><span>240 BPM</span></div>
+            <section class="pulse-panel" aria-label="Playback and tempo">
+                <div class="tempo-face">
+                    <div class="bpm-label">Current tempo</div>
+                    <div class="tempo-stepper">
+                        <button type="button" class="icon-button" id="decreaseBtn" aria-label="Decrease tempo" disabled>&minus;</button>
+                        <div><div id="bpmDisplay" class="bpm-display">120</div><div id="bpmUnit" class="bpm-unit">BPM / quarter note</div></div>
+                        <button type="button" class="icon-button" id="increaseBtn" aria-label="Increase tempo" disabled>+</button>
                     </div>
+                    <ol id="beatIndicators" class="beat-indicators" aria-label="Beats in the bar"></ol>
+                    <div id="beatPosition" class="beat-position" aria-live="off">Ready for the first beat</div>
                 </div>
-                <div class="button-section">
-                    <button type="button" class="start-stop-btn" id="startStopBtn"><i data-lucide="play" class="play-icon" aria-hidden="true"></i><i data-lucide="square" class="stop-icon" aria-hidden="true"></i><span class="button-label">Start</span></button>
-                    <button type="button" class="icon-button reset-btn" id="resetBtn" aria-label="Reset metronome" data-tooltip="Reset metronome"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button>
+                <div class="transport">
+                    <div class="tempo-edit">
+                        <label for="tempoInput">Set BPM</label>
+                        <input id="tempoInput" type="number" min="30" max="240" step="1" value="120" inputmode="numeric" aria-describedby="tempoError" disabled>
+                        <button id="tapBtn" type="button" class="button" disabled>Tap tempo</button>
+                    </div>
+                    <p id="tempoError" class="field-error" role="alert"></p>
+                    <input id="tempoSlider" type="range" min="30" max="240" value="120" aria-label="Tempo" disabled>
+                    <div class="range-labels"><span>30 BPM</span><span>240 BPM</span></div>
+                    <p id="tapStatus" class="hint" role="status">Tap at least twice at the main beat, not the subdivision.</p>
+                    <div class="transport-buttons">
+                        <button id="startStopBtn" class="button primary" type="button" disabled>Start</button>
+                        <button id="resetBtn" class="button" type="button" disabled>Reset</button>
+                    </div>
+                    <div class="session-row"><span id="playStatus" role="status">Ready</span><span id="elapsed" role="timer" aria-label="Practice elapsed time">00:00</span></div>
+                    <progress id="sessionProgress" max="1" value="0" aria-label="Timed practice progress" hidden></progress>
+                    <p id="sessionSummary" class="hint">4/4 · Main beats · No time limit</p>
+                    <p id="appError" class="notice error" role="alert" hidden></p>
                 </div>
-                <p class="settings-note"><i data-lucide="volume-2" aria-hidden="true"></i> Audio clicks &amp; visual pulse</p>
+            </section>
+            <section class="controls-panel" aria-label="Rhythm, practice settings, and guide" tabindex="0">
+                <h2 class="panel-title">Make it your rhythm</h2>
+                <fieldset id="rhythmSettings">
+                    <legend class="sr-only">Rhythm settings (change while stopped)</legend>
+                    <div class="control-grid">
+                        <label>Meter<select id="meter"><option value="2/4">2/4</option><option value="3/4">3/4</option><option value="4/4" selected>4/4</option><option value="5/4">5/4</option><option value="6/8">6/8 (two dotted beats)</option></select></label>
+                        <label>Subdivision<select id="subdivision"><option value="1">Main beats</option><option value="2">Eighth notes</option><option value="3">Triplets</option><option value="4">Sixteenth notes</option></select></label>
+                    </div>
+                    <label class="check-row"><input id="accent" type="checkbox" checked> Accent the first beat</label>
+                    <p id="meterHint" class="hint">Each numbered beat is a quarter note.</p>
+                </fieldset>
+                <div class="sound-row">
+                    <label>Sound<select id="sound"><option value="click">Soft click</option><option value="woodblock" selected>Woodblock-style</option><option value="beep">Beep</option></select></label>
+                    <label class="volume-label" for="volume">Volume <output id="volumeValue" for="volume">60%</output><input id="volume" type="range" min="0" max="100" value="60"></label>
+                </div>
+                <details id="practiceDetails">
+                    <summary>Practice tools <span>Count-in, timer &amp; trainer</span></summary>
+                    <div class="details-content">
+                        <fieldset id="practiceSettings">
+                            <legend class="sr-only">Practice settings (change while stopped)</legend>
+                            <div class="control-grid">
+                                <label>Count-in<select id="countInBars"><option value="0">None</option><option value="1">1 bar</option><option value="2">2 bars</option></select></label>
+                                <label>Timer (seconds)<input id="durationSeconds" type="number" min="0" max="3600" step="1" value="0" inputmode="numeric" aria-describedby="timerHint"></label>
+                            </div>
+                            <p class="hint" id="timerHint">0 = no limit. 300 = five minutes. Count-in is not timed.</p>
+                            <label class="check-row"><input id="trainerEnabled" type="checkbox"> Gradually increase tempo</label>
+                            <div id="trainerFields" class="control-grid trainer-grid" hidden>
+                                <label>Increase BPM<input id="trainerStep" type="number" min="1" max="20" step="1" value="2" inputmode="numeric"></label>
+                                <label>Every N bars<input id="trainerBars" type="number" min="1" max="32" step="1" value="8" inputmode="numeric"></label>
+                                <label>Target BPM<input id="trainerTarget" type="number" min="30" max="240" step="1" value="160" inputmode="numeric"></label>
+                            </div>
+                            <p class="hint">The trainer starts at Set BPM, increases after complete practice bars, and holds at the target. Stop returns to your starting tempo.</p>
+                        </fieldset>
+                        <label class="check-row"><input id="keepAwake" type="checkbox"> Keep screen awake while playing</label>
+                        <p id="wakeStatus" class="hint" role="status">Optional; depends on browser support and battery settings.</p>
+                        <p class="hint">Meter, subdivision, count-in, and timer changes are available when stopped. Sound and volume can change during playback. BPM changes during count-in apply when practice begins; the count-in keeps its original tempo.</p>
+                    </div>
+                </details>
+                <details id="presetDetails">
+                    <summary>Presets &amp; sharing <span>Keep a useful setup</span></summary>
+                    <div class="details-content">
+                        <label>Preset name<input id="presetName" type="text" maxlength="60" placeholder="Guitar scales" autocomplete="off"></label>
+                        <button id="savePreset" class="button full-width" type="button">Save current settings</button>
+                        <label>Saved on this device<select id="presetSelect"><option value="">No saved presets</option></select></label>
+                        <div class="button-row"><button id="loadPreset" class="button" type="button" disabled>Load</button><button id="deletePreset" class="button" type="button" disabled>Delete</button></div>
+                        <button id="clearPresets" class="button full-width" type="button" hidden>Clear unreadable preset data</button>
+                        <p id="presetStatus" class="hint" role="status">Named presets are stored only in this browser.</p>
+                        <button id="shareBtn" class="button full-width" type="button">Copy settings link</button>
+                        <div id="shareFallback" hidden><label>Settings link (copy manually)<input id="shareLink" type="text" readonly></label></div>
+                        <p id="shareStatus" class="hint" role="status">Links share settings, not preset names or practice history. Opening a link never starts audio.</p>
+                    </div>
+                </details>
+                <details id="guideDetails">
+                    <summary>Practice guide <span>Examples &amp; shortcuts</span></summary>
+                    <div class="details-content guide">
+                        <h3>Start simply</h3>
+                        <p>Set 60 BPM and press Start at a comfortable device volume. In 4/4, count four numbered clicks per bar. Try eighth notes to place an extra click halfway between beats. Tap tempo measures your main beat from up to six recent intervals; a pause of more than three seconds starts a new measurement.</p>
+                        <h3>Understand 6/8</h3>
+                        <p>Here, 6/8 uses two dotted-quarter beats per bar. At 60 BPM, each numbered beat lasts one second and a bar lasts two seconds. Select eighth notes to hear three equal clicks per numbered beat: count "1 and a, 2 and a." Sixteenth notes split each dotted beat into six. Changing meter resets subdivision to main beats.</p>
+                        <h3>Build speed without rushing</h3>
+                        <p>Try 60 BPM, 4/4, eighth notes, a one-bar count-in, and a 300-second timer. Turn on the trainer: add 2 BPM every eight bars up to 100 BPM. If your playing becomes uneven, stop and lower the starting tempo. The trainer never exceeds the target. A new Start begins a fresh session, including the count-in.</p>
+                        <h3>Keyboard and visual practice</h3>
+                        <p>With focus outside a form control, Space starts or stops, T taps tempo, and Up/Right or Down/Left changes tempo by 1 BPM (Shift: 5). Form controls retain their normal keyboard behavior. Numbered highlights follow the audio clock without announcing every click to screen readers. Set volume to 0 for silent visual practice.</p>
+                        <h3>Audio and device limitations</h3>
+                        <p>Clicks are synthesized with Web Audio and scheduled on its clock, independently of visual animation. Bluetooth output can add delay. If audio is interrupted or scheduling falls too far behind, playback stops with an explanation instead of rushing through missed beats. Keep the tab visible; screen wake lock cannot guarantee background playback or override battery-saving policies.</p>
+                        <h3>What is saved?</h3>
+                        <p>Only presets you explicitly save are kept in this browser's local storage. Delete them here or clear this site's browser data to remove them. Reloading uses defaults unless a settings link is open. No microphone, recording, or practice history is used. Reset stops playback and restores defaults without deleting presets. Shared settings are in the URL fragment; do not put personal information in links. See the <a href="../privacy.html">privacy policy</a> for advertising and other external requests.</p>
+                    </div>
+                </details>
             </section>
         </div>
-        <section class="practice-guide" aria-labelledby="practice-guide-title">
-            <h2 id="practice-guide-title">Practice with a steady reference</h2>
-            <div class="guide-grid">
-                <section aria-labelledby="practice-steps">
-                    <h3 id="practice-steps">Set up a session</h3>
-                    <ol>
-                        <li>Choose a whole-number tempo from 30 to 240 BPM using the slider, number field, or one-BPM minus/plus buttons. After typing, leave the field to apply the value.</li>
-                        <li>Turn your device volume down before pressing <strong>Start</strong>, then raise it to a comfortable level. The dot flashes with each click.</li>
-                        <li>Change the tempo while playing if needed. <strong>Stop</strong> keeps your tempo; <strong>Reset</strong> stops playback and returns to 120 BPM.</li>
-                    </ol>
-                </section>
-                <section aria-labelledby="practice-example">
-                    <h3 id="practice-example">Example: build a four-beat phrase</h3>
-                    <p>Set 60 BPM: there is one second between beats. Count “1, 2, 3, 4” with four clicks and play one note per click. Repeat the phrase four times without rushing, then try 64 BPM. If the phrase becomes uneven, return to 60 and repeat.</p>
-                    <p>For eighth-note practice, keep the same tempo and count “1 and 2 and 3 and 4 and,” placing each “and” between clicks. The tool does not generate these subdivisions or accent the first beat; you supply the count.</p>
-                </section>
-                <section aria-labelledby="practice-troubleshooting">
-                    <h3 id="practice-troubleshooting">If the click is missing or uneven</h3>
-                    <p>Check device volume, the selected audio output, and whether the browser tab is muted. Press Stop and then Start to retry audio after interacting with the page. A browser with Web Audio support is required.</p>
-                    <p>Keep this tab visible and the device awake. Background tabs, screen locking, and heavy browser workloads can disrupt timing; wireless audio can add delay. This is a practice reference, not a recording clock or a precision timing measurement.</p>
-                </section>
-                <section aria-labelledby="practice-session">
-                    <h3 id="practice-session">What is saved?</h3>
-                    <p>The tempo and playing state live only in this open page. Reloading starts a fresh session at 120 BPM. There is no practice history, recording, microphone access, or audio export.</p>
-                    <p>Clicks are generated in your browser, not downloaded as sound files. Fonts and icons load from external providers; see the <a href="../privacy.html">site privacy information</a> for the distinction between local tool use and website requests.</p>
-                </section>
-            </div>
-        </section>
     </main>
     <footer>
-        <div class="footer-inner wrap">
-            <div><div class="footer-title">Probable Octo Waddle</div><p>Free, focused browser utilities. Made for the everyday.</p></div>
-            <nav class="footer-links" aria-label="Footer navigation"><a href="../index.html#tools">The collection</a><a href="../about.html">About</a><a href="../privacy.html">Privacy</a></nav>
-        </div>
+        <div class="footer-inner wrap"><div class="footer-title">Free, focused browser utilities.</div><nav class="footer-links" aria-label="Footer navigation"><a href="../index.html#tools">The collection</a><a href="../about.html">About</a><a href="../privacy.html">Privacy</a></nav></div>
     </footer>
-
-    <script>
-        /**
-         * ===== METRONOME APPLICATION =====
-         * A pure JavaScript metronome using Web Audio API for accurate timing
-         * and visual feedback synchronization.
-         */
-
-        // ===== STATE MANAGEMENT =====
-        const state = {
-            isRunning: false,
-            bpm: 120,
-            nextBeatTime: 0,
-            audioContext: null,
-            schedulerId: null,
-            lookAheadTime: 25, // milliseconds - how far ahead to schedule beats
-            scheduleAheadTime: 0.1, // seconds - scheduler look ahead window
-        };
-
-        // ===== DOM ELEMENTS =====
-        const elements = {
-            bpmDisplay: document.getElementById('bpmDisplay'),
-            tempoSlider: document.getElementById('tempoSlider'),
-            tempoInput: document.getElementById('tempoInput'),
-            startStopBtn: document.getElementById('startStopBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            beatIndicator: document.getElementById('beatIndicator'),
-            decreaseBtn: document.getElementById('decreaseBtn'),
-            increaseBtn: document.getElementById('increaseBtn'),
-        };
-
-        /**
-         * Initialize the Web Audio Context
-         * This is required for playing sounds with the Web Audio API
-         */
-        function initializeAudioContext() {
-            if (state.audioContext === null) {
-                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            // Resume audio context if suspended (required by modern browsers)
-            if (state.audioContext.state === 'suspended') {
-                state.audioContext.resume();
-            }
-            return state.audioContext;
-        }
-
-        /**
-         * Generate and play a click sound using Web Audio API
-         * Creates a short beep tone without external files
-         */
-        function playClickSound() {
-            const context = initializeAudioContext();
-            const now = context.currentTime;
-            const duration = 0.1; // 100ms duration
-            const frequency = 1000; // Hz - frequency of the beep
-
-            // Create oscillator for the beep sound
-            const oscillator = context.createOscillator();
-            const gainNode = context.createGain();
-
-            oscillator.connect(gainNode);
-            gainNode.connect(context.destination);
-
-            // Set sound properties
-            oscillator.frequency.value = frequency;
-            oscillator.type = 'sine';
-
-            // Envelope: attack and release for a natural sound
-            gainNode.gain.setValueAtTime(0.3, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration);
-
-            // Play the sound
-            oscillator.start(now);
-            oscillator.stop(now + duration);
-        }
-
-        /**
-         * Trigger visual beat indication
-         * Adds a flash effect to the beat indicator circle
-         */
-        function triggerBeatVisualization() {
-            elements.beatIndicator.classList.add('active');
-
-            // Remove active class after brief duration for flash effect
-            setTimeout(() => {
-                elements.beatIndicator.classList.remove('active');
-            }, 150);
-        }
-
-        /**
-         * Schedule beats in advance
-         * Uses a look-ahead buffer for more accurate timing
-         * This compensates for browser scheduling limitations
-         */
-        function scheduler() {
-            // Schedule all beats that fall within the look-ahead window
-            while (state.nextBeatTime < state.audioContext.currentTime + state.scheduleAheadTime) {
-                scheduleBeat(state.nextBeatTime);
-                advanceToNextBeat();
-            }
-        }
-
-        /**
-         * Schedule a single beat at a specific time
-         * @param {number} beatTime - The time when the beat should occur
-         */
-        function scheduleBeat(beatTime) {
-            const context = initializeAudioContext();
-            const timeUntilBeat = beatTime - context.currentTime;
-
-            // Only schedule if the beat is in the near future (not in the past)
-            if (timeUntilBeat > 0 && timeUntilBeat < 1) {
-                // Schedule sound with a small delay from now
-                setTimeout(() => {
-                    playClickSound();
-                    triggerBeatVisualization();
-                }, timeUntilBeat * 1000);
-            }
-        }
-
-        /**
-         * Advance to the next beat
-         * Calculates the time of the next beat based on current BPM
-         */
-        function advanceToNextBeat() {
-            const beatLength = 60.0 / state.bpm; // seconds per beat
-            state.nextBeatTime += beatLength;
-        }
-
-        /**
-         * Main scheduler loop
-         * Runs continuously to maintain accurate beat scheduling
-         */
-        function startScheduler() {
-            const context = initializeAudioContext();
-            state.nextBeatTime = context.currentTime;
-
-            // Run scheduler at regular intervals
-            if (state.schedulerId !== null) {
-                clearInterval(state.schedulerId);
-            }
-
-            state.schedulerId = setInterval(() => {
-                if (state.isRunning) {
-                    scheduler();
-                }
-            }, state.lookAheadTime);
-        }
-
-        /**
-         * Stop the scheduler loop
-         */
-        function stopScheduler() {
-            if (state.schedulerId !== null) {
-                clearInterval(state.schedulerId);
-                state.schedulerId = null;
-            }
-        }
-
-        /**
-         * Start the metronome
-         */
-        function startMetronome() {
-            initializeAudioContext();
-            state.isRunning = true;
-            startScheduler();
-
-            // Update UI
-            elements.startStopBtn.classList.add('running');
-            elements.startStopBtn.querySelector('.button-label').textContent = 'Stop';
-            elements.beatIndicator.textContent = 'Playing';
-        }
-
-        /**
-         * Stop the metronome
-         */
-        function stopMetronome() {
-            state.isRunning = false;
-            stopScheduler();
-
-            // Update UI
-            elements.startStopBtn.classList.remove('running');
-            elements.startStopBtn.querySelector('.button-label').textContent = 'Start';
-            elements.beatIndicator.textContent = 'Stopped';
-            elements.beatIndicator.classList.remove('active');
-        }
-
-        /**
-         * Reset metronome to initial state
-         */
-        function resetMetronome() {
-            stopMetronome();
-            state.bpm = 120;
-            updateBPMDisplay();
-            elements.beatIndicator.textContent = 'Ready';
-        }
-
-        /**
-         * Update BPM value from slider or input
-         * @param {number} newBpm - The new BPM value
-         */
-        function updateBPM(newBpm) {
-            // Validate BPM is within range
-            const bpm = Math.max(30, Math.min(240, parseInt(newBpm) || 120));
-            state.bpm = bpm;
-            updateBPMDisplay();
-        }
-
-        /**
-         * Update all BPM display elements
-         */
-        function updateBPMDisplay() {
-            elements.bpmDisplay.textContent = state.bpm;
-            elements.tempoSlider.value = state.bpm;
-            elements.tempoInput.value = state.bpm;
-            elements.tempoInput.removeAttribute('aria-invalid');
-            elements.decreaseBtn.disabled = state.bpm <= 30;
-            elements.increaseBtn.disabled = state.bpm >= 240;
-        }
-
-        // ===== EVENT LISTENERS =====
-
-        /**
-         * Start/Stop Button
-         */
-        elements.startStopBtn.addEventListener('click', () => {
-            if (state.isRunning) {
-                stopMetronome();
-            } else {
-                startMetronome();
-            }
-        });
-
-        /**
-         * Reset Button
-         */
-        elements.resetBtn.addEventListener('click', resetMetronome);
-        elements.decreaseBtn.addEventListener('click', () => updateBPM(state.bpm - 1));
-        elements.increaseBtn.addEventListener('click', () => updateBPM(state.bpm + 1));
-
-        /**
-         * Tempo Slider Change
-         * Updates BPM when slider is moved
-         */
-        elements.tempoSlider.addEventListener('input', (e) => {
-            updateBPM(e.target.value);
-        });
-
-        /**
-         * Tempo Input Change
-         * Allows direct BPM input via text field
-         */
-        elements.tempoInput.addEventListener('change', (e) => {
-            updateBPM(e.target.value);
-        });
-
-        /**
-         * Tempo Input Real-time Validation
-         * Provides immediate feedback while typing
-         */
-        elements.tempoInput.addEventListener('input', (e) => {
-            const value = parseInt(e.target.value) || '';
-            if (value && (value < 30 || value > 240)) {
-                // Highlight invalid input
-                e.target.setAttribute('aria-invalid', 'true');
-            } else {
-                e.target.removeAttribute('aria-invalid');
-            }
-        });
-
-        // ===== INITIALIZATION =====
-        // Set initial BPM display
-        updateBPMDisplay();
-        window.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) window.lucide.createIcons();
-        });
-    </script>
 </body>
 </html>

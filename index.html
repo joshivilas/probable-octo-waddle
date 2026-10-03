@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="guide.css">
   <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
   <style>
     :root {
@@ -123,7 +124,7 @@
     .reset-button { border: 1px solid var(--ink); padding: 9px 18px; border-radius: 5px; color: white; background: var(--ink); }
     .content-section { border-top: 1px solid var(--line); padding-block: 44px; }
     .content-section h2 { font: 500 30px/1.25 var(--display); margin: 0 0 16px; }
-    .content-section > p { max-width: 700px; }
+    .content-section > p, .content-section > .instruction-content > p { max-width: 700px; }
     .content-section h3 { font: 500 17px/1.4 var(--display); margin: 0 0 12px; }
     .content-section p { color: var(--muted); font-size: 14px; margin-top: 0; }
     .guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 32px; margin-top: 30px; }
@@ -244,7 +245,7 @@
             <span class="card-meta"><i data-lucide="contrast" aria-hidden="true"></i> WCAG checks <span aria-hidden="true">&middot;</span> HEX &amp; ARGB</span>
           </div>
         </a>
-        <a href="metronome/metronome.html" class="tool-card" data-category="practice" data-keywords="music rhythm bpm tempo audio beat metronome" aria-labelledby="metronome-title" aria-describedby="metronome-description">
+        <a href="metronome/metronome.html" class="tool-card" data-category="practice" data-keywords="music rhythm bpm tempo audio beat metronome tap subdivisions timer trainer presets" aria-labelledby="metronome-title" aria-describedby="metronome-description">
           <div class="preview rhythm-preview" aria-hidden="true">
             <span class="preview-label">Find your rhythm</span>
             <div class="tempo"><strong>120</strong><span>BPM</span></div>
@@ -253,7 +254,7 @@
           <div class="card-body">
             <span class="card-category">Practice / Music</span>
             <div class="card-heading"><h2 id="metronome-title">Metronome</h2><span class="open-arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
-            <p class="tool-description" id="metronome-description">Keep a steady pulse, from the first slow practice to the final run-through.</p>
+            <p class="tool-description" id="metronome-description">Find your tempo, count the beat, and build speed with subdivisions and a progressive practice trainer.</p>
             <span class="card-meta"><i data-lucide="audio-lines" aria-hidden="true"></i> 30&ndash;240 BPM <span aria-hidden="true">&middot;</span> Visual beats</span>
           </div>
         </a>
@@ -291,7 +292,9 @@
       <div class="directory-end"><span id="result-count" role="status" aria-live="polite" aria-atomic="true">5 tools in the collection</span><span>Small tools. Room for big ideas.</span></div>
     </section>
 
-    <section class="content-section">
+    <details class="content-section instruction-guide">
+      <summary>Which tool should you use?</summary>
+      <div class="instruction-content">
       <h2>Which tool should you use?</h2>
       <p>Each utility is designed for a small, specific job. There is no account to create and the interactive work happens in your browser. Use the notes below to get a useful result quickly.</p>
       <div class="guide-grid">
@@ -301,7 +304,7 @@
         </article>
         <article>
           <h3>Practice with a steady pulse</h3>
-          <p>Use the Metronome for scales, chord changes, timing drills, or tempo checks. Begin slowly enough to play cleanly, repeat the passage without tension, then increase the tempo in small steps. Reducing the tempo after a mistake is usually more productive than repeatedly attempting the final speed.</p>
+          <p>Use the Metronome for scales, chord changes, timing drills, or tempo checks. Tap a main beat to estimate BPM, choose a meter and subdivision, then use a count-in to prepare. The tempo trainer can increase speed after a chosen number of bars and hold at your target. Begin slowly enough to play cleanly; stop and reduce the tempo if the passage becomes uneven. Save a named preset locally to return to the same practice settings.</p>
         </article>
         <article>
           <h3>Share a winner announcement</h3>
@@ -316,7 +319,8 @@
           <p>PicNotch lets you crop a local image, choose a paper treatment, and export a postcard-style PNG. The selected photo is processed by the browser rather than uploaded to this site. Start with the highest-resolution original available and leave important faces or text away from the crop boundary.</p>
         </article>
       </div>
-    </section>
+      </div>
+    </details>
 
     <section class="content-section questions" aria-labelledby="questions-title">
       <h2 id="questions-title">A few good questions.</h2>

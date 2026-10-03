@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../info-pages.css">
+    <link rel="stylesheet" href="../guide.css">
     <script src="contrast.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
     <style>
@@ -233,7 +234,9 @@
             </div>
             </section>
         </div>
-        <section class="tool-guide" aria-labelledby="guide-title">
+        <details class="tool-guide instruction-guide">
+            <summary>Choose readable text and background colors</summary>
+            <div class="instruction-content">
             <h2 id="guide-title">Choose readable text and background colors</h2>
             <ol>
                 <li>Enter colors with a leading # and six digits, such as #1A1A1A. Use Add color to compare more candidates.</li>
@@ -250,7 +253,8 @@
             <p>For transparency, layer order matters. Half-transparent black text on white looks gray; checking black alone would overstate its contrast. This tool composites onto a white page before calculating. Gradients, photographs, filters, and other underlying surfaces require testing the actual rendered colors at the weakest-contrast location.</p>
             <p>An invalid or empty selected color clears the contrast result rather than leaving an old pass visible. The standalone swatches show valid colors over white; the text sample shows the selected pair layered together. Color checks run locally, and reloading resets the palette. This tool does not currently save or share palettes.</p>
             <p>A passing ratio is not a complete accessibility audit. Check keyboard use, labels, focus, zoom, and whether information relies on color alone. Test relevant interactive states; inactive controls have different WCAG exceptions.</p>
-        </section>
+            </div>
+        </details>
     </main>
     <footer>
         <div class="footer-inner wrap">

@@ -37,6 +37,25 @@ test('inline JavaScript remains syntactically valid on all pages', () => {
     }
 });
 
+test('instruction sections are native disclosures closed by default', () => {
+    const guides = [
+        ['index.html', /\binstruction-guide\b/],
+        [path.join('color-compare', 'color-compare.html'), /\binstruction-guide\b/],
+        [path.join('prompts', 'prompts.html'), /\binstruction-guide\b/],
+        [path.join('celebrate', 'Celebrate-winner.html'), /\binstruction-guide\b/],
+        [path.join('PicNotch', 'index.html'), /\bstudio-guide\b/],
+        [path.join('metronome', 'metronome.html'), /\bguideDetails\b/]
+    ];
+    for (const [relative, marker] of guides) {
+        const source = fs.readFileSync(path.join(root, relative), 'utf8');
+        const attributes = [...source.matchAll(/<details\b([^>]*)>/gi)].map(match => match[1]);
+        assert.ok(attributes.some(value => marker.test(value)), `${relative} has a collapsible guide`);
+        for (const value of attributes) {
+            assert.doesNotMatch(value, /(?:^|\s)open(?:\s|=|$)/i, `${relative} defaults to collapsed`);
+        }
+    }
+});
+
 test('sitemap destinations exist and exclude celebration-only outputs', () => {
     const source = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
     for (const match of source.matchAll(/<loc>(.*?)<\/loc>/g)) {

@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../info-pages.css">
+  <link rel="stylesheet" href="../guide.css">
   <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
   <script defer src="prompt-data.js"></script>
   <script defer src="prompts.js"></script>
@@ -115,7 +116,17 @@
   </header>
   <main class="wrap" id="content" tabindex="-1">
     <section class="intro library-intro" aria-labelledby="page-title">
-      <div><div class="eyebrow">The everyday collection / Create</div><h1 id="page-title">Prompts Library<span class="title-dot">.</span></h1><p>Five focused guides for turning a vague request into a useful draft, practice plan, or visual concept.</p><p>Choose a task, replace the bracketed inputs, then copy the template into your preferred AI tool. Open each example and review guide for a concrete input, an illustrative result, and checks to apply before using a response. Examples are written illustrations, not tested AI outputs.</p></div>
+      <div>
+        <div class="eyebrow">The everyday collection / Create</div>
+        <h1 id="page-title">Prompts Library<span class="title-dot">.</span></h1>
+        <p>Five focused guides for turning a vague request into a useful draft, practice plan, or visual concept.</p>
+        <details class="instruction-guide">
+          <summary>How to use the prompts</summary>
+          <div class="instruction-content">
+            <p>Choose a task, replace the bracketed inputs, then copy the template into your preferred AI tool. Open each example and review guide for a concrete input, an illustrative result, and checks to apply before using a response. Examples are written illustrations, not tested AI outputs.</p>
+          </div>
+        </details>
+      </div>
       <p class="library-total" id="library-total"></p>
     </section>
     <div class="library-layout" id="library" hidden>
