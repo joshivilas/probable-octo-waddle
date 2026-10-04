@@ -4,6 +4,16 @@
       "route": "/color-compare/color-compare2.html",
       "redirect": "/color-compare/color-compare.html",
       "statusCode": 301
+    },
+    {
+      "route": "/piano-notes",
+      "redirect": "/piano-notes/piano-notes.html",
+      "statusCode": 301
+    },
+    {
+      "route": "/piano-notes/",
+      "redirect": "/piano-notes/piano-notes.html",
+      "statusCode": 301
     }
   ],
   "platform": {
