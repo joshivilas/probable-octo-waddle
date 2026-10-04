@@ -146,3 +146,15 @@ test('legacy color page redirects to the maintained tool in Azure configuration'
     assert.equal(route.statusCode, 301);
     assert.equal(config.platform.apiRuntime, 'node:22');
 });
+
+test('Azure routes are unique after trailing-slash normalization and short links point to real pages', () => {
+    const config = JSON.parse(fs.readFileSync(path.join(root, 'staticwebapp.config.json'), 'utf8'));
+    const normalized = config.routes.map(item => item.route.toLowerCase().replace(/\/+$/, '') || '/');
+    assert.equal(new Set(normalized).size, normalized.length, `duplicate routes: ${normalized.join(', ')}`);
+    for (const item of config.routes.filter(route => route.redirect)) {
+        assert.ok(fs.existsSync(path.join(root, item.redirect.slice(1))), item.redirect);
+    }
+    const piano = config.routes.find(item => item.route === '/piano-notes');
+    assert.equal(piano.redirect, '/piano-notes/piano-notes.html');
+    assert.equal(piano.statusCode, 301);
+});

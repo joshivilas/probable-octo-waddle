@@ -9,11 +9,6 @@
       "route": "/piano-notes",
       "redirect": "/piano-notes/piano-notes.html",
       "statusCode": 301
-    },
-    {
-      "route": "/piano-notes/",
-      "redirect": "/piano-notes/piano-notes.html",
-      "statusCode": 301
     }
   ],
   "platform": {
