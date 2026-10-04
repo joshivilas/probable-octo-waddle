@@ -5,3 +5,6 @@ Ideas:
     - Web Audio API for accurate timing
     - Real-time BPM adjustment
     - Visual beat indicator
+- piano note trainer ✅
+    - Web MIDI keyboard detection
+    - Random note prompts with instant feedback

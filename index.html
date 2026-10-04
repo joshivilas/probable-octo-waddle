@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Free browser-based tools for checking color contrast, practicing tempo, creating winner celebrations, improving prompts, and making postcard images.">
+  <meta name="description" content="Free browser-based tools for checking color contrast, practicing tempo, learning piano notes, creating winner celebrations, improving prompts, and making postcard images.">
   <title>Probable Octo Waddle - Practical Browser Tools</title>
   <link rel="icon" type="image/png" sizes="32x32" href="logo/favicon-32.png">
   <link rel="icon" type="image/svg+xml" sizes="any" href="logo/favicon.svg">
@@ -72,6 +72,11 @@
     .tool-card:nth-child(3) { animation-delay: .12s; }
     .tool-card:nth-child(4) { animation-delay: .18s; }
     .tool-card:nth-child(5) { animation-delay: .24s; }
+    .tool-card:nth-child(6) { animation-delay: .3s; }
+    .tool-card.wide { grid-column: 1 / -1; flex-direction: row; }
+    .tool-card.wide .preview { flex: 0 0 calc(50% - 11px); height: auto; min-height: 186px; border-bottom: 0; border-right: 1px solid #192c2608; }
+    .tool-card.wide .card-body { justify-content: center; }
+    .tool-card.wide .card-meta { margin-top: 0; }
     .tool-card:hover { border-color: #90ae9e; box-shadow: 0 8px 22px #192c2610; transform: translateY(-3px); }
     .preview { height: 186px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #192c2608; }
     .preview-label { position: absolute; top: 15px; left: 18px; font: 500 10px var(--display); text-transform: uppercase; z-index: 1; }
@@ -110,6 +115,14 @@
     .prompt-preview { background: #f4efcc; color: #685b23; }
     .prompt-sample { width: 77%; border-left: 2px solid #b4a354; padding: 0 0 0 16px; font: 400 15px/1.6 var(--display); margin-top: 18px; }
     .prompt-sample span { padding: 1px 3px; background: #e6daa0; }
+    .piano-preview { background: #e4eef6; color: #2d4f6e; flex-direction: column; gap: 12px; }
+    .mini-note { font: 500 54px/1 var(--display); margin-top: 8px; }
+    .mini-keys { position: relative; display: flex; width: 196px; height: 62px; }
+    .mini-keys b { flex: 1; background: white; border: 1px solid #b7c9d9; margin-left: -1px; border-radius: 0 0 4px 4px; }
+    .mini-keys b:first-child { margin-left: 0; }
+    .mini-keys i { position: absolute; top: 0; width: 16px; height: 37px; left: calc(var(--p) * 28px - 8px); background: #2d4f6e; border-radius: 0 0 3px 3px; transition: background .2s; }
+    .mini-keys i.hit { background: #399663; }
+    .tool-card:hover .mini-keys i.hit { background: #4fb27a; box-shadow: 0 0 0 4px #39966330; }
     .card-body { padding: 22px 24px 20px; display: flex; flex-direction: column; flex: 1; }
     .card-category { color: var(--muted); font: 500 10px var(--display); text-transform: uppercase; margin-bottom: 8px; }
     .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -150,6 +163,10 @@
     @keyframes pulse { 0%, 24% { background: #555c9f; } 25%, 100% { background: #bfc2e0; } }
     @media (max-width: 900px) {
       .tool-card, .tool-card:nth-child(-n+2) { grid-column: span 3; }
+      .tool-card.wide { grid-column: span 3; flex-direction: column; }
+      .tool-card.wide .preview { flex: none; height: 186px; min-height: 0; border-right: 0; border-bottom: 1px solid #192c2608; }
+      .tool-card.wide .card-body { justify-content: flex-start; }
+      .tool-card.wide .card-meta { margin-top: auto; }
       .guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .collection-note { display: none; }
       .toolbar { align-items: flex-start; flex-direction: column; gap: 12px; }
@@ -169,7 +186,7 @@
       .filters { width: 100%; flex-wrap: nowrap; justify-content: space-between; gap: 0; }
       .filter { font-size: 12px; padding: 8px 11px; }
       .tools-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
-      .tool-card, .tool-card:nth-child(-n+2) { grid-column: auto; }
+      .tool-card, .tool-card:nth-child(-n+2), .tool-card.wide { grid-column: auto; }
       .card-body { padding: 20px; }
       .card-heading h2 { font-size: 21px; }
       .directory-end { flex-direction: column; gap: 4px; }
@@ -225,7 +242,7 @@
               <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&amp;fit=crop&amp;w=600&amp;q=85" alt="" width="600" height="360" fetchpriority="high">
               <div class="postcard-caption"><span>A LITTLE PIECE OF EVERYWHERE</span><i data-lucide="asterisk"></i></div>
             </div>
-            <span class="preview-number">01 / 05</span>
+            <span class="preview-number">01 / 06</span>
           </div>
           <div class="card-body">
             <span class="card-category">Design / Photography</span>
@@ -238,7 +255,7 @@
           <div class="preview color-preview" aria-hidden="true">
             <span class="preview-label">A better kind of contrast</span>
             <div class="color-pair"><span>Aa</span><span>Aa</span></div>
-            <span class="contrast-label">COLOR, WITH CLARITY</span><span class="preview-number">02 / 05</span>
+            <span class="contrast-label">COLOR, WITH CLARITY</span><span class="preview-number">02 / 06</span>
           </div>
           <div class="card-body">
             <span class="card-category">Design / Accessibility</span>
@@ -251,7 +268,7 @@
           <div class="preview rhythm-preview" aria-hidden="true">
             <span class="preview-label">Find your rhythm</span>
             <div class="tempo"><strong>120</strong><span>BPM</span></div>
-            <div class="beats"><span></span><span></span><span></span><span></span></div><span class="preview-number">03 / 05</span>
+            <div class="beats"><span></span><span></span><span></span><span></span></div><span class="preview-number">03 / 06</span>
           </div>
           <div class="card-body">
             <span class="card-category">Practice / Music</span>
@@ -264,7 +281,7 @@
           <div class="preview celebrate-preview" aria-hidden="true">
             <span class="preview-label">Give good work its moment</span>
             <span class="trophy"><i data-lucide="trophy"></i></span>
-            <b class="confetti"></b><b class="confetti"></b><b class="confetti"></b><b class="confetti"></b><span class="preview-number">04 / 05</span>
+            <b class="confetti"></b><b class="confetti"></b><b class="confetti"></b><b class="confetti"></b><span class="preview-number">04 / 06</span>
           </div>
           <div class="card-body">
             <span class="card-category">Create / Celebrations</span>
@@ -276,7 +293,7 @@
         <a href="prompts/prompts.html" class="tool-card" data-category="create" data-keywords="ai writing text music video email prompts library" aria-labelledby="prompts-title" aria-describedby="prompts-description">
           <div class="preview prompt-preview" aria-hidden="true">
             <span class="preview-label">Good ideas start somewhere</span>
-            <div class="prompt-sample">Rewrite the following email to be more <span>concise and professional</span>...</div><span class="preview-number">05 / 05</span>
+            <div class="prompt-sample">Rewrite the following email to be more <span>concise and professional</span>...</div><span class="preview-number">05 / 06</span>
           </div>
           <div class="card-body">
             <span class="card-category">Create / Writing</span>
@@ -285,13 +302,27 @@
             <span class="card-meta"><i data-lucide="text-cursor-input" aria-hidden="true"></i> Ready-to-copy prompts</span>
           </div>
         </a>
+        <a href="piano-notes/piano-notes.html" class="tool-card wide" data-category="practice" data-keywords="piano keyboard midi keys notes learn note names sharps flats music practice trainer quiz" aria-labelledby="piano-title" aria-describedby="piano-description">
+          <div class="preview piano-preview" aria-hidden="true">
+            <span class="preview-label">See it, find it, play it</span>
+            <div class="mini-note">F&sharp;</div>
+            <div class="mini-keys"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><i style="--p: 1"></i><i style="--p: 2"></i><i class="hit" style="--p: 4"></i><i style="--p: 5"></i><i style="--p: 6"></i></div>
+            <span class="preview-number">06 / 06</span>
+          </div>
+          <div class="card-body">
+            <span class="card-category">Practice / Music</span>
+            <div class="card-heading"><h2 id="piano-title">Piano Note Trainer</h2><span class="open-arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p class="tool-description" id="piano-description">Connect your MIDI keyboard, get a random note, and play it. Instant feedback helps you learn every key by name.</p>
+            <span class="card-meta"><i data-lucide="piano" aria-hidden="true"></i> MIDI keyboards <span aria-hidden="true">&middot;</span> Sharps &amp; flats</span>
+          </div>
+        </a>
       </div>
       <div class="empty-state" id="empty-state" hidden>
         <h2>No matching tools</h2>
         <p>Nothing in the collection matches this search.</p>
         <button class="reset-button" id="reset-filters" type="button">Clear filters</button>
       </div>
-      <div class="directory-end"><span id="result-count" role="status" aria-live="polite" aria-atomic="true">5 tools in the collection</span><span>Small tools. Room for big ideas.</span></div>
+      <div class="directory-end"><span id="result-count" role="status" aria-live="polite" aria-atomic="true">6 tools in the collection</span><span>Small tools. Room for big ideas.</span></div>
     </section>
 
     <details class="content-section instruction-guide">
@@ -308,6 +339,10 @@
           <h3>Practice with a steady pulse</h3>
           <p>Use the Metronome for scales, chord changes, timing drills, or tempo checks. Tap a main beat to estimate BPM, choose a meter and subdivision, then use a count-in to prepare. The tempo trainer can increase speed after a chosen number of bars and hold at your target. Begin slowly enough to play cleanly; stop and reduce the tempo if the passage becomes uneven. Save a named preset locally to return to the same practice settings.</p>
         </article>
+                  <article>
+                    <h3>Learn the notes on a keyboard</h3>
+                    <p>Use the Piano Note Trainer with a digital piano or MIDI keyboard connected by USB. Select Connect keyboard, allow MIDI access, and press Start. Play each note shown in any octave; a wrong key tells you what you played so you can try again. Begin with the white keys, then add sharps and flats. Browsers without Web MIDI, such as Safari, can still use the on-screen keys.</p>
+                  </article>
         <article>
           <h3>Share a winner announcement</h3>
           <p>The Winner Declaration tool creates a celebration link from the names you enter. Choose a visual style, generate the link, and send it to the group. Names are encoded in the URL fragment, so the celebration page can read them without sending the list to a site database. Avoid entering confidential or sensitive information in any shareable URL.</p>

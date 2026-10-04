@@ -112,7 +112,8 @@ test('instruction sections are native disclosures closed by default', () => {
         [path.join('prompts', 'prompts.html'), /\binstruction-guide\b/],
         [path.join('celebrate', 'Celebrate-winner.html'), /\binstruction-guide\b/],
         [path.join('PicNotch', 'index.html'), /\bstudio-guide\b/],
-        [path.join('metronome', 'metronome.html'), /\bguideDetails\b/]
+        [path.join('metronome', 'metronome.html'), /\bguideDetails\b/],
+        [path.join('piano-notes', 'piano-notes.html'), /\bguideDetails\b/]
     ];
     for (const [relative, marker] of guides) {
         const source = fs.readFileSync(path.join(root, relative), 'utf8');

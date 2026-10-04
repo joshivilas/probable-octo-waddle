@@ -163,6 +163,34 @@ round trips, keyboard behavior, clipboard fallback, and denied/unsupported wake
 lock. Check desktop at 1280x800 and 1024x650 (100vh shell, independently scrollable
 settings), tablet, 320px mobile, and short landscape (page scrolling, no clipping).
 
+### 4. **Piano Note Trainer** 🎹
+A note-finding exercise for a MIDI keyboard or digital piano connected to the computer.
+- **Features:**
+  - Web MIDI connection with live connected/missing/blocked/unsupported status and hot-plug detection
+  - Shuffled note prompts: every note appears once per cycle, and repeats are always spaced apart (mixed spelling alternates each black key's names fairly); any octave counts
+  - White keys only or all 12 notes, with black keys spelled as sharps, flats, or both
+  - Correct answers advance automatically; wrong answers name the key played so you can retry
+  - Right/wrong feedback: ✓/✗ badge, green/red panel flash, and optional synthesized sound cues (chime / low tone)
+  - Skip reveals the answer on a one-octave on-screen keyboard, which also accepts clicks
+  - Score, accuracy, streak, best streak, average response time, and 10/20/50-note rounds
+  - Current note set shown under the prompt; settings remembered in localStorage (`pow.pianoNotes.settings.v1`), scores never saved
+- **Usage:** Open `piano-notes/piano-notes.html`, select **Connect keyboard**, allow MIDI access, and press **Start**
+
+Space starts/stops and N skips when focus is outside interactive controls. MIDI
+permission is requested only on Connect keyboard, or automatically if it was
+already granted. Browsers do not remember permissions for pages opened as
+`file:///` URLs, so the page shows a notice there; test through the deployed site or
+a local server such as `http://localhost` to see automatic reconnection. Only note-on messages are used; system-exclusive access is not
+requested, and nothing played is recorded; only the exercise settings are kept locally. Web MIDI requires a secure context (HTTPS or
+localhost) and works in Chrome, Edge, Opera, and desktop Firefox. Safari and iOS
+browsers fall back to the on-screen keys.
+
+Run the exercise logic and site regression checks:
+
+```sh
+node --test piano-notes/notes.test.cjs piano-notes/cues.test.cjs tests/site.test.cjs
+```
+
 ## Advertising and review readiness
 
 Every HTML page includes the asynchronous Google AdSense loader for

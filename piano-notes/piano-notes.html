@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9788688281525825" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn the piano keyboard with a free note trainer. Connect a MIDI keyboard, get a random note, play it, and see instantly whether you found the right key.">
+    <title>Piano Note Trainer - Probable Octo Waddle</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../logo/favicon-32.png">
+    <link rel="icon" type="image/svg+xml" sizes="any" href="../logo/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="../logo/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../info-pages.css">
+    <link rel="stylesheet" href="piano-notes.css">
+    <script defer src="notes.js"></script>
+    <script defer src="cues.js"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <a href="#content" class="skip-link">Skip to note trainer</a>
+    <header class="site-header">
+        <div class="header-inner wrap">
+            <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true"><img src="../logo/octo-waddle-logo.svg" width="40" height="40" alt=""></span><span>Probable<br>Octo Waddle</span></a>
+            <nav class="site-nav" aria-label="Main navigation"><a href="../index.html#tools">The collection</a><a href="../about.html">About</a><a href="../privacy.html">Privacy</a></nav>
+        </div>
+    </header>
+    <main class="wrap" id="content" tabindex="-1">
+        <div class="page-heading">
+            <div><div class="eyebrow">The everyday collection / Practice</div><h1>Piano Note Trainer<span class="title-dot">.</span></h1></div>
+            <p>See a note. Find the key.</p>
+        </div>
+        <noscript><p class="notice">Enable JavaScript to use the note trainer. The practice guide below can still be opened and read.</p></noscript>
+        <div class="practice-layout">
+            <section class="note-panel" aria-label="Note exercise">
+                <div class="device-bar">
+                    <div id="deviceStatus" class="device-status" data-state="idle" role="status"><span class="status-dot" aria-hidden="true"></span><span id="deviceText">Keyboard not connected</span></div>
+                    <button id="connectBtn" class="button compact" type="button" disabled>Connect keyboard</button>
+                </div>
+                <p id="fileNotice" class="hint centered" hidden>This page is open as a local file, so the browser forgets MIDI permission when you refresh. Open it from the website or a local server (http://localhost) and it reconnects on its own.</p>
+                <div id="noteFace" class="note-face">
+                    <div class="note-label">Play this note</div>
+                    <div class="note-display"><span class="note-wrap"><span id="noteVisual" aria-hidden="true">&ndash;</span><span id="resultBadge" class="result-badge" aria-hidden="true" hidden></span></span><span id="noteSpoken" class="sr-only">No note yet</span></div>
+                    <div id="noteHint" class="note-hint">White keys &middot; 7 notes &middot; Any octave</div>
+                    <p id="feedback" class="feedback" data-tone="neutral" role="status" aria-atomic="true">Press Start when you are ready.</p>
+                    <p id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+                </div>
+                <div id="piano" class="piano" role="group" aria-label="On-screen keys, one octave">
+                    <button type="button" class="key white" data-pc="0" aria-label="C"></button>
+                    <button type="button" class="key white" data-pc="2" aria-label="D"></button>
+                    <button type="button" class="key white" data-pc="4" aria-label="E"></button>
+                    <button type="button" class="key white" data-pc="5" aria-label="F"></button>
+                    <button type="button" class="key white" data-pc="7" aria-label="G"></button>
+                    <button type="button" class="key white" data-pc="9" aria-label="A"></button>
+                    <button type="button" class="key white" data-pc="11" aria-label="B"></button>
+                    <button type="button" class="key black" data-pc="1" style="--pos: 1" aria-label="C sharp or D flat"></button>
+                    <button type="button" class="key black" data-pc="3" style="--pos: 2" aria-label="D sharp or E flat"></button>
+                    <button type="button" class="key black" data-pc="6" style="--pos: 4" aria-label="F sharp or G flat"></button>
+                    <button type="button" class="key black" data-pc="8" style="--pos: 5" aria-label="G sharp or A flat"></button>
+                    <button type="button" class="key black" data-pc="10" style="--pos: 6" aria-label="A sharp or B flat"></button>
+                </div>
+                <p id="lastPlayed" class="hint centered">Play any key to test your connection.</p>
+                <div class="transport-buttons">
+                    <button id="startBtn" class="button primary" type="button" disabled>Start</button>
+                    <button id="skipBtn" class="button" type="button" disabled>Skip</button>
+                </div>
+                <dl class="stats" aria-label="Session score">
+                    <div><dt>Correct</dt><dd id="statCorrect">0</dd></div>
+                    <div><dt>Accuracy</dt><dd id="statAccuracy">&ndash;</dd></div>
+                    <div><dt>Streak</dt><dd id="statStreak">0</dd></div>
+                    <div><dt>Avg. time</dt><dd id="statTime">&ndash;</dd></div>
+                </dl>
+                <p id="statBest" class="hint centered">Best streak: 0</p>
+                <p id="appError" class="notice error" role="alert" hidden></p>
+            </section>
+            <section class="controls-panel" aria-label="Exercise settings, keyboard connection, and guide" tabindex="0">
+                <h2 class="panel-title">Shape the exercise</h2>
+                <fieldset id="exerciseSettings">
+                    <legend class="sr-only">Exercise settings (change while stopped)</legend>
+                    <div class="control-grid">
+                        <label>Notes<select id="noteSet"><option value="naturals" selected>White keys only</option><option value="all">All 12 notes</option></select></label>
+                        <label>Black keys as<select id="spelling" disabled><option value="sharps" selected>Sharps (C&sharp;)</option><option value="flats">Flats (D&flat;)</option><option value="mixed">Sharps &amp; flats</option></select></label>
+                    </div>
+                    <label class="stacked">Round length<select id="roundLength"><option value="0" selected>Unlimited</option><option value="10">10 notes</option><option value="20">20 notes</option><option value="50">50 notes</option></select></label>
+                    <p id="settingsHint" class="hint">Start with the seven white keys. Add black keys once C to B feels easy.</p>
+                </fieldset>
+                <label class="check-row"><input id="soundCues" type="checkbox" checked> Sound cues for right and wrong answers</label>
+                <p class="hint">A soft chime means correct and a low tone means try again. Your keyboard's own sound is unaffected.</p>
+                <details id="deviceDetails">
+                    <summary>Keyboard connection <span>Devices &amp; troubleshooting</span></summary>
+                    <div class="details-content">
+                        <ul id="deviceList" class="device-list"><li class="empty">No MIDI keyboards found yet.</li></ul>
+                        <p class="hint">Connect a digital piano or MIDI keyboard by USB (or a USB MIDI interface) before or after opening this page, then select Connect keyboard and allow MIDI access. New devices are detected automatically after that. The browser remembers your choice for the website, so later visits reconnect without asking.</p>
+                        <p class="hint">Web MIDI works on secure (https) pages in current Chrome, Edge, and Opera (desktop and Android) and in desktop Firefox. Safari and iOS browsers do not support it; use the on-screen keys there. Some built-in app browsers, such as the one in VS Code, block MIDI entirely, so open the page in Chrome or Edge instead. If nothing responds, close other music apps that may be holding the keyboard, reconnect the cable, and check the browser's site permissions for MIDI devices.</p>
+                    </div>
+                </details>
+                <details id="guideDetails">
+                    <summary>Practice guide <span>How the exercise works</span></summary>
+                    <div class="details-content guide">
+                        <h3>How a round works</h3>
+                        <p>Select Start and a random note appears. Play it anywhere on your keyboard; every octave counts. A correct key shows a green tick, plays a soft chime, and the next note follows a moment later. A wrong key shows a red cross, plays a low tone, and tells you which note you played, so you can try again. Turn off Sound cues for silent practice. Skip reveals the answer on the on-screen keys and moves on.</p>
+                        <h3>Find notes by pattern</h3>
+                        <p>Black keys sit in groups of two and three. C is the white key just left of each group of two; F is just left of each group of three. Locate those anchors first, then count up or down to nearby notes instead of reading key by key from the left edge.</p>
+                        <h3>Sharps and flats</h3>
+                        <p>A sharp (&sharp;) is the next key to the right, and a flat (&flat;) is the next key to the left. Each black key has two names, so C&sharp; and D&flat; are the same key. Choose sharps, flats, or both to practise whichever names your music uses.</p>
+                        <h3>Score and shortcuts</h3>
+                        <p>Accuracy compares correct keys with every key you played during the round; skips do not count as attempts but do end your streak. Average time measures from a note appearing to the correct key. With focus outside a form control, Space starts or stops and N skips. The on-screen keys also answer, which is useful without a keyboard.</p>
+                        <h3>What is shared?</h3>
+                        <p>Note messages from your keyboard are read only by this page while it is open. Nothing you play is recorded or sent to a server, and no system-exclusive MIDI access is requested. Your exercise settings (note set, naming, round length, and sound cues) are remembered in this browser's local storage; scores are not saved. See the <a href="../privacy.html">privacy policy</a> for advertising and other external requests.</p>
+                    </div>
+                </details>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-inner wrap"><div class="footer-title">Free, focused browser utilities.</div><nav class="footer-links" aria-label="Footer navigation"><a href="../index.html#tools">The collection</a><a href="../about.html">About</a><a href="../privacy.html">Privacy</a></nav></div>
+    </footer>
+</body>
+</html>
