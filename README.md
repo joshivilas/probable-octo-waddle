@@ -191,6 +191,27 @@ Run the exercise logic and site regression checks:
 node --test piano-notes/notes.test.cjs piano-notes/cues.test.cjs tests/site.test.cjs
 ```
 
+## Google Analytics
+
+Every HTML page includes the asynchronous Google tag and a single GA4
+initialization for measurement ID `G-9XEBN4MED1`. The configuration automatically
+reports page views; no additional manual page-view event is sent. Enhanced
+measurement options are controlled in the Google Analytics web stream settings.
+
+After deployment, check Reports > Realtime while visiting the public site.
+Use the Pages and screens report for per-page views; standard reports can take
+24-48 hours to populate. These are browser-reported views, not Azure SiteHits,
+and blockers or consent choices can prevent collection.
+
+The supplied tag loads immediately. This repository does not yet implement
+Analytics consent gating. Configure and verify applicable consent controls before
+collecting analytics where consent is required; an AdSense consent message alone
+does not guarantee that Analytics consent is wired correctly. Avoid sending
+personal information in URLs, page titles, or custom events.
+
+Run `node --test tests/site.test.cjs` to check that all pages load and initialize
+the correct tag exactly once, alongside the existing site checks.
+
 ## Advertising and review readiness
 
 Every HTML page includes the asynchronous Google AdSense loader for

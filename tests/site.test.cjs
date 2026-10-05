@@ -27,6 +27,36 @@ test('every HTML page includes the requested AdSense loader exactly once in its 
     assert.match(fs.readFileSync(path.join(root, 'ads.txt'), 'utf8'), /google\.com,\s*pub-9788688281525825,\s*DIRECT/);
 });
 
+test('every HTML page loads and initializes the requested GA4 tag exactly once in its head', () => {
+    const measurementId = 'G-9XEBN4MED1';
+    for (const file of htmlFiles(root)) {
+        const source = fs.readFileSync(file, 'utf8');
+        const head = source.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i);
+        assert.ok(head, file);
+        const loaders = [...source.matchAll(/<script\b[^>]*\bsrc=["']https:\/\/www\.googletagmanager\.com\/gtag\/js[^"']*["'][^>]*>/gi)];
+        assert.equal(loaders.length, 1, file);
+        const loader = loaders[0][0];
+        assert.ok(head[1].includes(loader), file);
+        assert.match(loader, /\basync\b/, file);
+        const url = new URL(loader.match(/\bsrc=["']([^"']+)["']/i)[1]);
+        assert.equal(url.searchParams.get('id'), measurementId, file);
+
+        const initializers = [...source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)]
+            .filter(match => /\bgtag\s*\(\s*['"]config['"]/.test(match[1]));
+        assert.equal(initializers.length, 1, file);
+        assert.ok(head[1].includes(initializers[0][0]), file);
+        const context = vm.createContext({});
+        vm.runInContext('window = globalThis; dataLayer = ["existing event"];', context);
+        vm.runInContext(initializers[0][1], context, { filename: file });
+        assert.equal(context.dataLayer[0], 'existing event', file);
+        const events = Array.from(context.dataLayer).slice(1).map(event => Array.from(event));
+        assert.equal(events.length, 2, file);
+        assert.equal(events[0][0], 'js', file);
+        assert.ok(Number.isFinite(Number(events[0][1])), file);
+        assert.deepEqual(events[1], ['config', measurementId], file);
+    }
+});
+
 test('inline JavaScript remains syntactically valid on all pages', () => {
     for (const file of htmlFiles(root)) {
         const source = fs.readFileSync(file, 'utf8');
